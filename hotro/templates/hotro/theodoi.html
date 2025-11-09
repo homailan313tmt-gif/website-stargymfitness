@@ -1,0 +1,141 @@
+{% extends "base-customer.html" %}
+{% block title %}Theo dõi phản hồi | Star Gym Fitness{% endblock %}
+
+{% block content %}
+<!-- ====== PHẦN TIÊU ĐỀ ====== -->
+<div style="max-width:800px; margin:50px auto; color:white; text-align:center;">
+  <h2 class="text-light mb-5" style="font-weight:600;">Theo dõi phản hồi</h2>
+
+  <!-- ====== BẢNG THEO DÕI ====== -->
+  <div class="table-wrapper mx-auto">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Ngày</th>
+          <th>Loại phản hồi</th>
+          <th>Trạng thái</th>
+          <th>Chi tiết</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in ds %}
+        <tr>
+          <td>{{ item.ngay_gui|date:"d-m-Y" }}</td>
+          <td>{{ item.loai }}</td>
+          <td>
+            {% if item.trang_thai == "Đã xử lý" %}
+              <span class="status done">Đã xử lý</span>
+            {% else %}
+              <span class="status pending">Chưa xử lý</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'chi_tiet' item.id %}" class="detail-link">Xem</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center text-secondary">Chưa có phản hồi nào được gửi.</td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ====== NÚT TRỞ VỀ ====== -->
+  <div class="text-center mt-3">
+    <a href="{% url 'gui_phan_hoi' %}" class="btn btn-secondary">Trở về</a>
+  </div>
+</div>
+
+<!-- ====== CSS: ĐỒNG BỘ GIAO DIỆN ====== -->
+<style>
+.table-wrapper {
+  background-color: #1c1c1c;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.15);
+  padding: 25px;
+  width: 85%;
+  max-width: 750px;
+  margin-top: -10px;
+  color: #f8f8f8;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #f5f5f5;
+  text-align: center;
+}
+
+.custom-table thead {
+  border-bottom: 2px solid #f1c40f;
+  color: #f1c40f;
+}
+
+.custom-table th {
+  padding: 14px 10px;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.custom-table td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #2e2e2e;
+}
+
+.custom-table tr:last-child td {
+  border-bottom: none;
+}
+
+.custom-table tr:hover {
+  background-color: #2a2a2a;
+  transition: 0.2s ease;
+}
+
+.status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status.done {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.status.pending {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.detail-link {
+  color: #f1c40f;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.detail-link:hover {
+  text-decoration: underline;
+  color: #ffd700;
+}
+
+/* ====== Nút trở về ====== */
+.btn-warning {
+  background-color: #f1c40f;
+  color: #000;
+  border: none;
+  transition: 0.2s ease;
+}
+
+.btn-warning:hover {
+  background-color: #ffd700;
+  transform: scale(1.05);
+}
+</style>
+{% endblock %}

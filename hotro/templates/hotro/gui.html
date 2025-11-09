@@ -1,0 +1,110 @@
+{% extends "base-customer.html" %}
+{% block title %}Hỗ trợ khách hàng | Star Gym Fitness{% endblock %}
+
+{% block content %}
+<div style="max-width:800px;margin:50px auto;color:white;text-align:center;">
+  <h2 class="text-light mb-5" style="font-weight:600;">Hỗ trợ khách hàng</h2>
+
+  <form method="post" class="text-light text-start mx-auto" style="max-width:500px;">
+    {% csrf_token %}
+
+    <!-- Hàng 1: Loại phản hồi -->
+    <div class="mb-3 d-flex align-items-center justify-content-between">
+      <label class="form-label mb-0">Loại phản hồi:</label>
+      <div class="col-input">
+        {{ form.loai }}
+      </div>
+    </div>
+
+    <!-- Hàng 2: Nội dung phản hồi -->
+    <div class="mb-4">
+      <label class="form-label">Nội dung phản hồi:</label>
+        <textarea name="noi_dung" class="form-control bg-dark text-light"
+         rows="4" placeholder="Nhập nội dung phản hồi..."></textarea>
+
+      {% if da_gui %}
+        <p class="fst-italic mt-3"
+           style="text-align:center; color:#FFD700; font-weight:100;">
+           Đã tiếp nhận phản hồi. Cảm ơn bạn đã liên hệ!</p>
+      {% endif %}
+    </div>
+
+    <!-- Nút GỬI & HỦY -->
+    <div class="d-flex justify-content-center gap-3 mt-3">
+      <button type="submit" class="btn btn-warning px-4">Gửi</button>
+      <a href="{% url 'theo_doi' %}" class="btn btn-secondary px-4">Hủy</a>
+    </div>
+  </form>
+
+  <!-- Link theo dõi -->
+  <a href="{% url 'theo_doi' %}"
+     class="d-block mt-4 text-light fst-italic"
+     style="text-decoration: underline;">Theo dõi phản hồi</a>
+</div>
+
+<style>
+/* ===== Label style ===== */
+.form-label {
+  font-size: 1.1rem;
+  min-width: 160px;           /* 🔹 tăng width tối thiểu để chữ không xuống dòng */
+  white-space: nowrap;        /* 🔹 bắt buộc giữ nguyên trên 1 dòng */
+  text-align: left;
+  font-weight: 200;
+  color: #f8f8f8;
+  letter-spacing: 0.3px;
+}
+
+/* ===== Hộp chọn loại phản hồi ===== */
+.col-input select {
+  width: 220px !important;
+  background-color: #2b2e31;    /* 🔹 cùng màu với textarea */
+  color: white;
+  border: 1px solid #777;       /* 🔹 viền sáng hơn nhẹ */
+  border-radius: 6px;
+  padding: 6px 8px;
+  height: 40px;                 /* cao ngang với kiểu textarea */
+  transition: 0.2s ease;
+}
+
+.col-input {
+  margin-left: 10px;          /* 🔹 tạo khoảng cách giữa label và select */
+}
+
+/* hiệu ứng hover + focus cho hộp chọn */
+.col-input select:hover,
+.col-input select:focus {
+  border-color: #f1c40f;
+  box-shadow: 0 0 6px #f1c40f;
+  outline: none;
+}
+
+/* ===== Spacing & layout ===== */
+form {
+  margin-top: -30px;
+}
+
+.mb-3 {
+  margin-bottom: 15px !important;
+}
+
+.mb-4 {
+  margin-top: 25px !important;
+  margin-bottom: 15px !important;
+}
+
+/* ===== Textarea ===== */
+textarea {
+  margin-top: 10px;
+  resize: none;
+  border-radius: 6px;
+  border: 1px solid #555;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #f1c40f;
+  box-shadow: 0 0 6px #f1c40f;
+}
+
+</style>
+{% endblock %}

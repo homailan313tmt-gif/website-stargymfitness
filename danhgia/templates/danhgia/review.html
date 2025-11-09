@@ -1,0 +1,178 @@
+{% extends "base-customer.html" %}
+{% load static %}
+
+{% block title %}Đánh giá | Star Gym Fitness{% endblock %}
+
+{% block content %}
+
+<!-- ====== PHẦN TIÊU ĐỀ CHÍNH ====== -->
+<div style="max-width:800px;margin:50px auto;color:white;text-align:center;">
+  <!-- Tiêu đề trang, căn giữa -->
+  <h2 class="text-light mb-5" style="font-weight:600;">Đánh giá</h2>
+
+  <!-- ====== FORM GỬI ĐÁNH GIÁ ====== -->
+  <form method="post" class="text-light text-start mx-auto" style="max-width:500px;">
+    {% csrf_token %} <!-- bảo mật CSRF bắt buộc trong Django -->
+
+    <!-- Hàng 1: Đánh giá chung -->
+    <div class="mb-3 d-flex align-items-center justify-content-between">
+      <label class="form-label mb-0">Đánh giá chung:</label>
+      <div class="rating-group" id="rating-chung">
+        {% for i in "12345" %} <!-- hiển thị 5 ngôi sao -->
+        <span class="star" data-value="{{ i }}">★</span>
+        {% endfor %}
+        <!-- input ẩn để lưu giá trị số sao (1-5) -->
+        <input type="hidden" name="danh_gia_chung" id="input-chung" required>
+      </div>
+    </div>
+
+    <!-- Hàng 2: Thái độ phục vụ -->
+    <div class="mb-3 d-flex align-items-center justify-content-between">
+      <label class="form-label mb-0">Thái độ phục vụ:</label>
+      <div class="rating-group" id="rating-phucvu">
+        {% for i in "12345" %}
+        <span class="star" data-value="{{ i }}">★</span>
+        {% endfor %}
+        <input type="hidden" name="thai_do_phuc_vu" id="input-phucvu" required>
+      </div>
+    </div>
+
+    <!-- Hàng 3: Chất lượng dịch vụ -->
+    <div class="mb-3 d-flex align-items-center justify-content-between">
+      <label class="form-label mb-0">Chất lượng dịch vụ:</label>
+      <div class="rating-group" id="rating-chatluong">
+        {% for i in "12345" %}
+        <span class="star" data-value="{{ i }}">★</span>
+        {% endfor %}
+        <input type="hidden" name="chat_luong_dich_vu" id="input-chatluong" required>
+      </div>
+    </div>
+
+    <!-- Hàng 4: Nhận xét chi tiết -->
+    <div class="mb-4">
+      <label class="form-label">Nhận xét chi tiết:</label>
+      <textarea name="nhan_xet" class="form-control bg-dark text-light" rows="4" placeholder="Thêm nhận xét"></textarea>
+      {% if da_gui %}
+        <p class="fst-italic mt-3"
+           style="text-align:center; color:#FFD700; font-weight:100;">
+           Đánh giá thành công!</p>
+      {% endif %}
+    </div>
+
+    <!-- Nút GỬI & HỦY -->
+    <div class="d-flex justify-content-center gap-3 mt-3">
+      <button type="submit" class="btn btn-warning px-4">Gửi</button>
+      <a href="{% url 'theo_doi' %}" class="btn btn-secondary px-4">Hủy</a>
+    </div>
+  </form>
+</div>
+
+<!-- ====== PHẦN HIỂN THỊ CÁC ĐÁNH GIÁ GẦN ĐÂY ====== -->
+<hr class="my-5 text-secondary">
+
+<h4 class="text-warning text-center mb-3">Đánh giá gần đây</h4>
+<div class="text-light">
+  {% for dg in danhgias %}
+    <!-- mỗi đánh giá hiển thị sao, nhận xét và thời gian -->
+    <div class="border-bottom border-secondary py-2">
+      <p>⭐ {{ dg.danh_gia_chung }}/5 | 💬 {{ dg.nhan_xet }}</p>
+      <small class="text-secondary">{{ dg.ngay_tao|date:"d/m/Y H:i" }}</small>
+    </div>
+  {% empty %}
+    <!-- nếu chưa có đánh giá -->
+    <p class="text-center text-secondary">Chưa có đánh giá nào.</p>
+  {% endfor %}
+</div>
+
+
+<!-- ====== CSS: CĂN GIAO DIỆN & STYLE NGÔI SAO ====== -->
+<style>
+.col-form-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+/* căn hàng ngôi sao ngang hàng label */
+.rating-group {
+  display: flex;
+  gap: 5px;
+  flex-direction: row;
+}
+
+/* style sao */
+.star {
+  font-size: 36px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+/* khi chọn sao thì chuyển vàng */
+.star.active {
+  color: gold;
+}
+
+/* hover vàng tạm thời */
+.star:hover {
+  color: gold;
+    transform: scale(1.2);
+}
+
+.form-label {
+ font-size: 1.1rem;
+  width: 200px;             /* rộng hơn để cân bố cục */
+  text-align: left;
+  font-size: 1.1rem;        /* tăng kích thước chữ (~18px) */
+  font-weight: 200;         /* chữ đậm hơn */
+  color: #f8f8f8;           /* trắng sáng hơn nhẹ */
+  letter-spacing: 0.3px;    /* giãn nhẹ cho dễ đọc */
+}
+
+form {
+  margin-top: -30px; /* kéo form lên gần tiêu đề hơn */
+}
+
+.mb-3 {
+  margin-bottom: 15px !important; /* giảm khoảng cách giữa các hàng */
+}
+.mb-4 {
+  margin-top: 25px !important;
+  margin-bottom: 15px !important; /* cho đồng đều với 3 dòng trên */
+}
+textarea {
+  margin-top: 10px; /* để textarea không dính sát label */
+}
+
+
+</style>
+
+
+<!-- ====== JS: XỬ LÝ CLICK CHỌN SAO ====== -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // hàm dùng chung cho 3 nhóm sao
+  function setupRating(groupId, inputId) {
+    const stars = document.querySelectorAll(`#${groupId} .star`);
+    const input = document.getElementById(inputId);
+
+    // xử lý khi người dùng click chọn sao
+    stars.forEach((star, index) => {
+      star.addEventListener("click", () => {
+        input.value = star.dataset.value; // gán giá trị sao vào input ẩn
+        // tô vàng các sao đã chọn
+        stars.forEach((s, i) => {
+          s.classList.toggle("active", i <= index);
+        });
+      });
+    });
+  }
+
+  // gọi hàm cho 3 nhóm sao
+  setupRating("rating-chung", "input-chung");
+  setupRating("rating-phucvu", "input-phucvu");
+  setupRating("rating-chatluong", "input-chatluong");
+});
+</script>
+
+{% endblock %}
