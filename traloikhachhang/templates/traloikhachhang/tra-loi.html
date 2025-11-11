@@ -1,0 +1,32 @@
+{% extends "base-staff.html" %}
+{% block title %}Trả lời phản hồi{% endblock %}
+{% block content %}
+<div class="container py-5 text-light" style="max-width:800px;">
+  <h2 class="mb-4 fw-bold text-warning">Trả lời phản hồi</h2>
+
+  <p><strong>Ngày:</strong> {{ ph.ngay_gui|date:"d-m-Y" }}</p>
+  <p><strong>Loại phản hồi:</strong> {{ ph.loai }}</p>
+  <p><strong>Nội dung:</strong> {{ ph.noi_dung }}</p>
+
+  <form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Trạng thái</label>
+      <select name="trang_thai" class="form-select bg-dark text-light border-warning">
+        <option value="Chưa xử lý" {% if ph.trang_thai == 'Chưa xử lý' %}selected{% endif %}>Chưa xử lý</option>
+        <option value="Đã xử lý" {% if ph.trang_thai == 'Đã xử lý' %}selected{% endif %}>Đã xử lý</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Trả lời phản hồi</label>
+      <textarea name="tra_loi" rows="4" class="form-control bg-dark text-light border-warning">{{ ph.tra_loi }}</textarea>
+    </div>
+
+    <div class="d-flex gap-3">
+      <button type="submit" class="btn btn-warning px-4">Gửi</button>
+      <a href="{% url 'quan-ly' %}" class="btn btn-secondary px-4">Hủy</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

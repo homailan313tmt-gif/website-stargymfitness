@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'danhgia',
-    'hotro'
+    'hotro',
+    'traloikhachhang',
+    'taikhoan',
+    'Quanlylichtap'
 ]
 
 MIDDLEWARE = [
@@ -121,6 +124,16 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
 
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
+MEDIA_URL = '/media/'                      # ✅ upload ảnh đại diện
+MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = 'taikhoan:dang_nhap'           # ✅ tên URL tiếng Việt
+LOGIN_REDIRECT_URL = '/tai-khoan/ho-so/'
+LOGOUT_REDIRECT_URL = '/tai-khoan/dang-nhap/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

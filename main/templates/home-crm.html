@@ -1,0 +1,99 @@
+{% extends "base-staff.html" %}
+{% load static %}
+
+{% block content %}
+<main class="container-fluid py-5 text-light" style="background-color: #0d0d0d; min-height: 100vh;">
+
+  <!-- TIÊU ĐỀ CHÍNH -->
+  <section class="text-center mb-5">
+    <h1 class="fw-bold text-warning mb-3">🏋️‍♂️ STAR GYM FITNESS CRM SYSTEM</h1>
+    <p class="fs-5 text-secondary">
+      Hệ thống quản trị quan hệ khách hàng giúp kết nối <strong>Khách hàng – Huấn luyện viên – Nhân viên</strong> trong một nền tảng duy nhất.
+    </p>
+  </section>
+
+  <!-- BẢNG THỐNG KÊ CHUNG -->
+  <section class="row text-center justify-content-center mb-5 g-4">
+    <div class="col-md-3 col-sm-6">
+      <div class="card bg-black border border-warning rounded-4 shadow-lg p-4 h-100 hover-card">
+        <h2 class="text-warning fw-bold mb-1">{{ total_customers|default:128 }}</h2>
+        <p class="text-secondary mb-0">Khách hàng đang hoạt động</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="card bg-black border border-success rounded-4 shadow-lg p-4 h-100 hover-card">
+        <h2 class="text-success fw-bold mb-1">{{ total_trainers|default:24 }}</h2>
+        <p class="text-secondary mb-0">Huấn luyện viên đang làm việc</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="card bg-black border border-danger rounded-4 shadow-lg p-4 h-100 hover-card">
+        <h2 class="text-danger fw-bold mb-1">{{ complaints|default:5 }}</h2>
+        <p class="text-secondary mb-0">Khiếu nại chưa xử lý</p>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="card bg-black border border-info rounded-4 shadow-lg p-4 h-100 hover-card">
+        <h2 class="text-info fw-bold mb-1">{{ feedbacks|default:20 }}</h2>
+        <p class="text-secondary mb-0">Phản hồi khách hàng mới</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHÂN HỆ CHỨC NĂNG -->
+  <section class="text-center mt-5">
+    <h3 class="fw-bold text-warning mb-4">🔗 Các chức năng chính</h3>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-3 col-sm-6">
+        <a href="{% url 'ho_tro_gui' %}" class="card bg-dark border border-warning text-light p-4 rounded-4 shadow-lg h-100 hover-card text-decoration-none">
+          <h4 class="fw-bold text-warning mb-2">💬 Hỗ trợ khách hàng</h4>
+          <p class="text-secondary mb-0">Gửi và theo dõi yêu cầu, khiếu nại hoặc góp ý.</p>
+        </a>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <a href="{% url 'quan-ly' %}" class="card bg-dark border border-warning text-light p-4 rounded-4 shadow-lg h-100 hover-card text-decoration-none">
+          <h4 class="fw-bold text-warning mb-2">📋 Quản lý phản hồi</h4>
+          <p class="text-secondary mb-0">Nhân viên xem và xử lý phản hồi từ khách hàng.</p>
+        </a>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <a href="#" class="card bg-dark border border-warning text-light p-4 rounded-4 shadow-lg h-100 hover-card text-decoration-none">
+          <h4 class="fw-bold text-warning mb-2">🏋️‍♀️ Quản lý lịch tập</h4>
+          <p class="text-secondary mb-0">Huấn luyện viên quản lý học viên và buổi tập.</p>
+        </a>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <a href="#" class="card bg-dark border border-warning text-light p-4 rounded-4 shadow-lg h-100 hover-card text-decoration-none">
+          <h4 class="fw-bold text-warning mb-2">📊 Báo cáo & Thống kê</h4>
+          <p class="text-secondary mb-0">Xem dữ liệu CRM tổng hợp, hành vi khách hàng, hiệu suất nhân viên.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GIỚI THIỆU DƯỚI CÙNG -->
+  <section class="mt-5 text-center text-secondary">
+    <hr class="border-secondary mb-4" style="width: 80%; margin: auto;">
+    <p class="fs-6">
+      🌟 <strong>STAR GYM FITNESS</strong> — Hệ thống quản trị quan hệ khách hàng toàn diện, kết nối con người và hiệu quả.
+    </p>
+  </section>
+</main>
+
+<!-- Hiệu ứng hover -->
+<style>
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+}
+</style>
+{% endblock %}

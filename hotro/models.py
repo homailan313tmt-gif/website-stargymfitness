@@ -1,6 +1,7 @@
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+
 
 class PhanHoi(models.Model):
     LOAI_PHAN_HOI = [
@@ -8,7 +9,7 @@ class PhanHoi(models.Model):
         ('Góp ý', 'Góp ý'),
         ('Thắc mắc', 'Thắc mắc'),
     ]
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     loai = models.CharField(max_length=50, choices=LOAI_PHAN_HOI)
     noi_dung = models.TextField()

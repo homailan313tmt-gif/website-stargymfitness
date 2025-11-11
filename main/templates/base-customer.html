@@ -16,7 +16,7 @@
       <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
         <ul class="navbar-nav mb-2 mb-lg-0 text-center">
           <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Trang chủ</a></li>
-          <li class="nav-item"><a class="nav-link {% if '/lich-tap' in request.path %}active{% endif %}" href="/lich-tap/">Lịch tập</a></li>
+          <li class="nav-item"><a class="nav-link {% if '/lich-su' in request.path %}active{% endif %}" href="/lich-su/">Lịch tập</a></li>
           <li class="nav-item"><a class="nav-link {% if '/danh-gia' in request.path %}active{% endif %}" href="/danh-gia/">Đánh giá</a></li>
           <li class="nav-item"><a class="nav-link {% if '/ho-tro' in request.path %}active{% endif %}" href="/ho-tro/">Hỗ trợ khách hàng</a></li>
         </ul>
@@ -50,20 +50,19 @@
                 {% endif %}
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="{% url 'account:profile' %}">Hồ sơ</a></li>
-                <li><a class="dropdown-item" href="{% url 'workouts:list' %}">Lịch tập</a></li>
-                <li><a class="dropdown-item" href="{% url 'feedback:history' %}">Phản hồi</a></li>
+                <li><a class="dropdown-item" href="{% url 'taikhoan:ho_so' %}">Hồ sơ</a></li>
+                <li><a class="dropdown-item" href="/lich-tap/">Lịch tập</a></li>
+                <li><a class="dropdown-item" href="/danh-gia/">Phản hồi</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                  <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
+                  <form method="post" action="{% url 'taikhoan:dang_xuat' %}">{% csrf_token %}
                     <button class="dropdown-item" type="submit">Đăng xuất</button>
                   </form>
                 </li>
               </ul>
             </div>
           {% else %}
-            <a class="btn btn-outline-warning btn-sm" href="{% url 'login' %}">Đăng nhập</a>
+            <a class="btn btn-outline-warning btn-sm" href="{% url 'taikhoan:dang_nhap' %}">Đăng nhập</a>
           {% endif %}
         </div>
 
