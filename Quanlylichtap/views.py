@@ -1,12 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import BuoiTap, NhanXet, ThongBao, HinhAnhCamNhan, HinhAnhNhanXet, \
-    KhachHang  # Đảm bảo KhachHang đã được import
+    KhachHang  
 from django.contrib.auth.decorators import login_required
 from taikhoan.decorators import role_required
 from taikhoan.models import HuanLuyenVien, KhachHang
 from django.db.models import Q
 from django.urls import reverse
-# Nếu bạn cần dùng ngày tháng, hãy giữ các import này (tôi sẽ giữ lại chúng)
 from django.utils import timezone
 from datetime import timedelta
 from django.views.decorators.http import require_POST
@@ -226,6 +225,7 @@ def them_ghi_chu(request, buoi_id):
         bt.ngay_tap = date.today()
 
     if request.method == 'POST':
+        # ===== Lưu text =====
         bt.muc_ta = (request.POST.get('muc_ta') or '').strip() or None
 
         sh_raw = (request.POST.get('so_hiep') or '').strip()
@@ -237,6 +237,11 @@ def them_ghi_chu(request, buoi_id):
         bt.cam_nhan = (request.POST.get('cam_nhan') or '').strip() or None
         bt.save()
 
+        delete_ids = request.POST.get("delete_list", "")
+        if delete_ids:
+            ids = [int(x) for x in delete_ids.split(",") if x.isdigit()]
+            if ids:
+                HinhAnhCamNhan.objects.filter(id__in=ids, buoi_tap=bt).delete()
 
         files = request.FILES.getlist('hinh_anh_cam_nhan')
         for f in files:
@@ -251,6 +256,7 @@ def them_ghi_chu(request, buoi_id):
     has_data = bool(
         bt.muc_ta or bt.so_hiep or bt.cam_nhan or bt.ds_anh_cam_nhan.exists()
     )
+
     show_view = (not edit_mode) and (saved or deleted or has_data)
 
     lich_su_list = (BuoiTap.objects
@@ -267,6 +273,7 @@ def them_ghi_chu(request, buoi_id):
         'show_view': show_view,
         'lich_su_list': lich_su_list,
     })
+
 
 from django.urls import reverse
 
@@ -300,5 +307,3 @@ def xoa_ghi_chu(request, buoi_id):
 
 
 from django.core.exceptions import ObjectDoesNotExist
-
-
