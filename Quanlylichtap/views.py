@@ -302,16 +302,3 @@ def xoa_ghi_chu(request, buoi_id):
 from django.core.exceptions import ObjectDoesNotExist
 
 
-@login_required
-def danh_sach_thong_bao(request):
-    try:
-
-        khach_hang_nhan = request.user.profile.khach_hang
-    except (AttributeError, ObjectDoesNotExist):
-
-        return render(request, 'Quanlylichtap/thong-bao.html', {'ds_thong_bao': []})
-
-    ds_thong_bao = ThongBao.objects.filter(nguoi_nhan=khach_hang_nhan).order_by('-thoi_gian')
-
-    ds_thong_bao.filter(is_read=False).update(is_read=True)
-    return render(request, 'Quanlylichtap/thong-bao.html', {'ds_thong_bao': ds_thong_bao})

@@ -1,7 +1,9 @@
 {% extends 'base-customer.html' %}
+{% load static %}
+
 {% block content %}
 <style>
-                :root {
+:root {
   --color-primary: #f7c948;
   --color-text-light: #fff;
   --color-text-secondary: #cfcfcf;
@@ -19,7 +21,6 @@
   text-transform: uppercase;
 }
 
-/* Thanh vàng nổi bật bên trái tiêu đề */
 .page-title::before {
   content: '';
   display: block;
@@ -30,22 +31,57 @@
 
 }
 
+.notification-item {
+    background-color: #1a1a1a;
+    padding: 15px;
+    border-bottom: 1px solid #333;
+    transition: background-color 0.2s;
+    color: var(--color-text-light);
+}
+.notification-item:hover {
+    background-color: #2b2b2b;
+}
+.notification-item b {
+    color: {% if not tb.is_read %}var(--color-primary){% else %}#fff{% endif %}; /* Màu vàng cho thông báo mới */
+    font-size: 1.05em;
+    display: block;
+}
+.notification-item p {
+    color: var(--color-text-secondary);
+    margin: 5px 0;
+}
+.notification-item small {
+    color: #999;
+    font-size: 0.85em;
+}
+
 </style>
 
-<div style="max-width:100%;margin:50px auto;color:white;">
+<div style="max-width:100%;margin:50px auto;padding: 0 20px;color:white;">
   <h2 class="page-title">Thông báo</h2>
   <hr style="border:1px solid #444;">
 
-  {% if thong_baos %}
-    {% for tb in thong_baos %}
-      <div style="padding:15px;border-bottom:1px solid #333;">
-        <b>{{ tb.tieu_de }}</b><br>
-        <p>{{ tb.noi_dung }}</p>
-        <small>{{ tb.thoi_gian|date:"H:i d/m/Y" }}</small>
-      </div>
-    {% endfor %}
+  {% if ds_thong_bao %}
+    <div style="border:1px solid #333; border-radius:8px; overflow:hidden;">
+      {% for tb in ds_thong_bao %}
+        <div class="notification-item"
+             style="border-bottom:1px solid #333;
+                    background-color:{% if not tb.is_read %}#222{% else %}#1a1a1a{% endif %};">
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+
+            <b style="color:{% if not tb.is_read %}#f7c948{% else %}#fff{% endif %};">
+                {{ tb.tieu_de }}
+            </b>
+            <small style="color:#999;">{{ tb.thoi_gian|date:"H:i d/m/Y" }}</small>
+          </div>
+
+          <p style="color:#cfcfcf; margin: 5px 0;">{{ tb.noi_dung }}</p>
+        </div>
+      {% endfor %}
+    </div>
   {% else %}
-    <p>Hiện chưa có thông báo nào.</p>
+    <p style="color:#cfcfcf; padding: 20px;">Hiện chưa có thông báo.</p>
   {% endif %}
 </div>
 {% endblock %}
