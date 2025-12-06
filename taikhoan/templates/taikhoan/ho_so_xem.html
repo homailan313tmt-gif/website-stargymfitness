@@ -1,0 +1,257 @@
+{% extends base %}
+{% block title %}Hồ sơ{% endblock %}
+{% block content %}
+<style>
+  .profile-card {
+    background: #121214;
+    border: 1px solid #2a2b2e;
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  .profile-card:hover {
+    border-color: #3a3b3e;
+    box-shadow: 0 4px 20px rgba(255, 193, 7, 0.1);
+  }
+  .avatar-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+  }
+  .avatar-image {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffc107;
+    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.2);
+  }
+  .avatar-placeholder {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1b1c1f 0%, #2a2b2e 100%);
+    border: 3px solid #ffc107;
+    font-size: 48px;
+    font-weight: 600;
+    color: #ffc107;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.2);
+  }
+  .role-badge {
+    display: inline-block;
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+  .info-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+  .info-value {
+    color: #e0e0e0;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .section-title {
+    color: #e0e0e0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #ffc107;
+  }
+  .contact-item {
+    color: #b0b0b0;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #2a2b2e;
+  }
+  .contact-item:last-child {
+    border-bottom: none;
+  }
+  .sidebar-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .sidebar-column > .profile-card:last-child {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .main-column {
+    display: flex;
+    flex-direction: column;
+  }
+  .main-column > .profile-card {
+    flex: 1;
+  }
+  .btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+    border: none;
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    color: #121214;
+  }
+  .btn-warning:hover {
+    background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.4);
+    color: #121214;
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border: none;
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    color: #fff;
+  }
+  .btn-danger:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.4);
+    color: #fff;
+  }
+</style>
+
+<div class="container" style="max-width:980px;">
+  <div class="row g-4">
+    <div class="col-md-4 sidebar-column">
+      <div class="profile-card">
+        <div class="text-center">
+          <div class="avatar-container">
+            {% if p.avatar_url %}
+              <img src="{{ p.avatar_url }}" class="avatar-image" alt="Avatar">
+            {% else %}
+              <div class="avatar-placeholder">
+                {{ p.ho_ten|first|upper|default:request.user.username|first|upper }}
+              </div>
+            {% endif %}
+          </div>
+          <h4 class="mt-3 mb-1" style="color: #e0e0e0; font-weight: 700;">
+            {{ p.ho_ten }}
+          </h4>
+          <div class="role-badge">
+            {% if p.role == 'customer' %}
+              <i class="bi bi-person-fill me-1"></i> Khách hàng
+            {% elif p.role == 'trainer' %}
+              <i class="bi bi-award-fill me-1"></i> Huấn luyện viên
+            {% elif p.role == 'staff' %}
+              <i class="bi bi-briefcase-fill me-1"></i> Nhân viên
+            {% else %}
+              {{ p.role }}
+            {% endif %}
+          </div>
+          <a class="btn btn-warning w-100 mt-3" href="{% url 'taikhoan:ho_so_sua' %}">
+            <i class="bi bi-pencil-square me-2"></i>Chỉnh sửa hồ sơ
+          </a>
+          <a class="btn btn-danger w-100 mt-2" href="{% url 'taikhoan:khoa_tai_khoan' %}">
+            <i class="bi bi-lock-fill me-2"></i>Khóa tài khoản
+          </a>
+        </div>
+      </div>
+
+      <div class="profile-card mt-3">
+        <div class="info-label mb-2">
+          <i class="bi bi-telephone-fill me-2" style="color: #ffc107;"></i>Liên hệ
+        </div>
+        <div class="contact-item">
+          <i class="bi bi-envelope me-2"></i>
+          <span class="small">{{ p.email|default:"Chưa cập nhật" }}</span>
+        </div>
+        <div class="contact-item">
+          <i class="bi bi-phone me-2"></i>
+          <span class="small">{{ p.so_dien_thoai|default:"Chưa cập nhật" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8 main-column">
+      <div class="profile-card">
+        <h5 class="section-title">
+          <i class="bi bi-info-circle-fill me-2"></i>Thông tin chi tiết
+        </h5>
+        {% if p.role == 'customer' %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="info-label">
+                <i class="bi bi-flag-fill me-1"></i>Mục tiêu
+              </div>
+              <div class="info-value">{{ p.muc_tieu|default:"Chưa cập nhật" }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="info-label">
+                <i class="bi bi-arrows-vertical me-1"></i>Chiều cao
+              </div>
+              <div class="info-value">
+                {% if p.chieu_cao_cm %}{{ p.chieu_cao_cm }} cm{% else %}—{% endif %}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="info-label">
+                <i class="bi bi-speedometer me-1"></i>Cân nặng
+              </div>
+              <div class="info-value">
+                {% if p.can_nang_kg %}{{ p.can_nang_kg }} kg{% else %}—{% endif %}
+              </div>
+            </div>
+          </div>
+        {% elif p.role == 'trainer' %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="info-label">
+                <i class="bi bi-award me-1"></i>Chứng chỉ
+              </div>
+              <div class="info-value">{{ p.chung_chi|default:"Chưa cập nhật" }}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-label">
+                <i class="bi bi-clock-history me-1"></i>Kinh nghiệm
+              </div>
+              <div class="info-value">
+                {% if p.kinh_nghiem_nam %}{{ p.kinh_nghiem_nam }} năm{% else %}—{% endif %}
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="info-label">
+                <i class="bi bi-file-text me-1"></i>Giới thiệu
+              </div>
+              <div class="info-value">{{ p.gioi_thieu|default:"Chưa cập nhật" }}</div>
+            </div>
+          </div>
+        {% elif p.role == 'staff' %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="info-label">
+                <i class="bi bi-building me-1"></i>Phòng ban
+              </div>
+              <div class="info-value">{{ p.phong_ban|default:"Chưa cập nhật" }}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-label">
+                <i class="bi bi-sticky me-1"></i>Ghi chú
+              </div>
+              <div class="info-value">{{ p.ghi_chu|default:"Chưa cập nhật" }}</div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+{% endblock %}

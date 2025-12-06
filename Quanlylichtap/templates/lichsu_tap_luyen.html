@@ -1,0 +1,177 @@
+{% extends "base-customer.html" %}
+{% load static %}
+
+{% block title %}Lịch sử tập luyện{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+  --color-primary: #f7c948;
+  --color-text-light: #fff;
+  --color-text-secondary: #cfcfcf;
+  --color-dark-card: #222;
+  --color-darker-card: #1a1a1a;
+}
+/* --- 1. Tiêu đề Highlight (Page Title) --- */
+.page-title {
+  color:#fff;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  text-align:left;
+  text-transform: uppercase;
+}
+
+/* Thanh vàng nổi bật bên trái tiêu đề */
+.page-title::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 1.1em;
+  background-color: var(--color-primary);
+  margin-right: 15px;
+
+}
+
+/* BẢNG DARK-GOLD */
+.table-dark-gold {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #111;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.table-dark-gold thead th {
+  background-color: #222;
+  color: #ffcc33;
+  padding: 12px;
+  border-bottom: 2px solid #ffcc33;
+  text-transform: capitalize;
+}
+
+.table-dark-gold tbody td {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  padding: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.table-dark-gold tr:last-child td {
+  border-bottom: none;
+}
+
+.table-dark-gold .btn-outline-dark {
+  color: #ffcc33;
+  border: 1px solid #ffcc33;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.table-dark-gold .btn-outline-dark:hover {
+  background-color: #ffcc33;
+  color: #111;
+}
+    .info-label{color:#cfcfcf}
+  .info-value{color:#fff}
+  .btn-gold{background:#f7c948;border:1px solid #f7c948;color:#111;padding:10px 18px;border-radius:10px}
+  .btn-gold:hover{filter:brightness(0.95)}
+  .btn-ghost{background:transparent;border:1px solid #666;color:#eee;padding:10px 16px;border-radius:10px}
+</style>
+
+<div class="page-wrap my-4">
+  <h1 class="page-title">LỊCH SỬ TẬP LUYỆN</h1>
+
+
+  <!-- FORM LỌC -->
+  <div class="d-flex justify-content-end mb-4">
+    <form method="get" class="d-flex">
+      <select name="status"
+              class="form-select me-2"
+              style="max-width:200px; background-color:#111; color:#fff; border:1px solid #ffcc33;">
+        <option value="">Tất cả</option>
+        <option value="Đã hoàn thành" {% if status == 'Đã hoàn thành' %}selected{% endif %}>Đã hoàn thành</option>
+        <option value="Chưa hoàn thành" {% if status == 'Chưa hoàn thành' %}selected{% endif %}>Chưa hoàn thành</option>
+      </select>
+
+      <input name="q" value="{{ q }}"
+             class="form-control me-2"
+             placeholder="Tìm kiếm..."
+             style="background-color:#111; color:#fff; border:1px solid #ffcc33;">
+
+      <button class="btn btn-warning fw-semibold px-4">Lọc</button>
+    </form>
+  </div>
+
+  <!-- BẢNG DARK-GOLD -->
+  <div class="p-3" style="background-color:#0d0d0d; border-radius:12px; box-shadow:0 0 15px rgba(255,215,0,0.15);">
+    <table class="table-dark-gold text-center">
+      <thead>
+        <tr>
+          <th>Ngày</th>
+          <th>Bài tập</th>
+          <th>Trạng thái</th>
+          <th>Chi tiết</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for buoi in ds_buoitap %}
+         <tr>
+            <td>{{ buoi.ngay_tap|date:"d-m-Y" }}</td>
+            <td>{{ buoi.bai_tap }}</td>
+            <td>{{ buoi.trang_thai }}</td>
+            <td>
+              {# Nếu buổi này đã có ghi chú (mức tạ / số hiệp / cảm nhận) #}
+              {% if buoi.muc_ta or buoi.so_hiep or buoi.cam_nhan %}
+                <a href="{% url 'them_ghi_chu' buoi.id %}"
+                   class="btn btn-sm btn-outline-dark">
+                  Xem
+                </a>
+              {% else %}
+                {# Chưa ghi chú gì -> cho nhập #}
+                <a href="{% url 'them_ghi_chu' buoi.id %}"
+                   class="btn btn-sm btn-outline-dark">
+                  Ghi chú
+                </a>
+              {% endif %}
+            </td>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="py-3 text-white">Chưa có dữ liệu buổi tập nào.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PHÂN TRANG -->
+  {% if page_obj.paginator.num_pages > 1 %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link bg-dark text-warning border-warning"
+             href="?page={{ page_obj.previous_page_number }}&q={{ q }}&status={{ status }}">« Trước</a>
+        </li>
+      {% endif %}
+      <li class="page-item disabled">
+        <a class="page-link bg-dark text-light border-warning">
+          Trang {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}
+        </a>
+      </li>
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link bg-dark text-warning border-warning"
+             href="?page={{ page_obj.next_page_number }}&q={{ q }}&status={{ status }}">Sau »</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+{% endblock %}

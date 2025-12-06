@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Đăng ký{% endblock %}
+{% block content %}
+
+<style>
+  .register-wrap{
+    min-height:calc(100vh - 160px);
+    display:grid;place-items:center;
+    padding:24px;
+  }
+
+  .register-card{
+    background:linear-gradient(135deg,#1a1b1e,#121214);
+    border:1px solid #2a2b2e;
+    border-radius:18px;
+    padding:1.5rem 1.4rem;
+    box-shadow:0 8px 28px rgba(0,0,0,.5);
+    max-width:420px;
+    width:100%;
+  }
+
+  .title{
+    color:#fff;
+    text-align:center;
+    margin-bottom:18px;
+    font-size:1.6rem;
+    font-weight:700;
+  }
+
+  .form-group{margin-bottom:.6rem;}
+  .form-label{color:#b0b0b0;font-weight:600;font-size:.82rem;margin-bottom:.35rem;display:block}
+
+  input[type="text"],input[type="email"],input[type="password"]{
+    background:#1b1c1f!important;
+    border:2px solid #2a2b2e!important;
+    color:#e0e0e0!important;
+    border-radius:10px!important;
+    padding:.7rem .9rem!important; /* giảm padding */
+    width:100%!important;
+    font-size:.95rem!important;
+    transition:all .25s ease!important;
+    box-sizing:border-box!important;
+  }
+  input:focus{
+    background:#fff!important;
+    color:#000!important;
+    border-color:#fff!important;
+    outline:none!important;
+    box-shadow:0 0 0 4px rgba(255,193,7,.25)!important;
+  }
+
+  .name-row{display:flex;gap:10px}
+  .name-row .col{flex:1 1 0}
+
+  .btn-submit{
+    background:linear-gradient(135deg,#ffc107,#ffb300)!important;
+    border:none!important;
+    color:#000!important;
+    font-weight:700!important;
+    padding:.8rem!important;
+    border-radius:10px!important;
+    width:100%!important;
+    font-size:1rem!important;
+    margin-top:.5rem!important;
+    cursor:pointer!important;
+    transition:.3s!important;
+  }
+  .btn-submit:hover{
+    background:linear-gradient(135deg,#ffb300,#ffa000)!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 6px 24px rgba(255,193,7,.5)!important;
+  }
+
+  .to-login{text-align:center;margin-top:12px;color:#888;font-size:.85rem}
+  .to-login a{color:#ffc107;text-decoration:none;font-weight:600;}
+  .to-login a:hover{color:#ffb300}
+
+  .field-error{color:#ff6b6b;font-size:.8rem;margin-top:.3rem}
+</style>
+
+
+<div class="register-wrap">
+  <div class="register-card shape--square">
+    <h2 class="title">Tạo tài khoản</h2>
+
+    <form method="post" action="">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label">Tên đăng nhập</label>
+        {{ form.username }}
+        {% if form.username.errors %}<div class="field-error">{{ form.username.errors|join:", " }}</div>{% endif %}
+      </div>
+
+
+      <div class="name-row">
+        <div class="col">
+          <div class="form-group">
+            <label class="form-label">Họ</label>
+            {{ form.ho }}  <!-- đổi -->
+            {% if form.ho.errors %}<div class="field-error">{{ form.ho.errors|join:", " }}</div>{% endif %}
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label class="form-label">Tên</label>
+            {{ form.ten }} <!-- đổi -->
+            {% if form.ten.errors %}<div class="field-error">{{ form.ten.errors|join:", " }}</div>{% endif %}
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        {{ form.email }}
+        {% if form.email.errors %}<div class="field-error">{{ form.email.errors|join:", " }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Mật khẩu</label>
+        {{ form.password1 }}
+        {% if form.password1.errors %}<div class="field-error">{{ form.password1.errors|join:", " }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nhập lại mật khẩu</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}<div class="field-error">{{ form.password2.errors|join:", " }}</div>{% endif %}
+      </div>
+
+      <button class="btn-submit">Đăng ký</button>
+    </form>
+
+    <div class="to-login">
+      Đã có tài khoản?
+      <a href="{% url 'taikhoan:dang_nhap' %}">Đăng nhập</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base-trainer.html' %}
+{% block title %}Danh sách tập luyện{% endblock %}
+{% block content %}
+
+<style>
+    :root {
+  --color-primary: #f7c948;
+  --color-text-light: #fff;
+  --color-text-secondary: #cfcfcf;
+  --color-dark-card: #222;
+  --color-darker-card: #1a1a1a;
+}
+/* --- 1. Tiêu đề Highlight (Page Title) --- */
+.page-title {
+  color:#fff;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  text-align:left;
+  text-transform: uppercase;
+}
+
+/* Thanh vàng nổi bật bên trái tiêu đề */
+.page-title::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 1.1em;
+  background-color: var(--color-primary);
+  margin-right: 15px;
+
+}
+
+.table-dark-gold {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #111;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+.table-dark-gold thead th {
+  background-color: #222;
+  color: #ffcc33;
+  padding: 12px;
+  border-bottom: 2px solid #ffcc33;
+}
+.table-dark-gold tbody td {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  padding: 10px;
+  border-bottom: 1px solid #333;
+}
+</style>
+
+<div class="page-wrap my-4" style="min-height: 70vh;">
+  <h1 class="page-title">Danh sách học viên</h1>
+
+  <!-- FORM LỌC -->
+  <div class="d-flex justify-content-end mb-4">
+    <form method="get" class="d-flex">
+      <input name="q" value="{{ q }}" class="form-control me-2" placeholder="Tìm học viên..."
+        style="background-color:#111; color:#fff; border:1px solid #ffcc33;">
+      <button class="btn btn-warning fw-semibold px-4">Lọc</button>
+    </form>
+  </div>
+
+  <!-- BẢNG -->
+  <div class="p-3" style="background-color:#0d0d0d; border-radius:12px;">
+    <table class="table-dark-gold text-center">
+      <thead>
+        <tr>
+          <th>Học viên</th>
+          <th>Xem danh sách buổi tập</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for hv in hoc_viens %}
+        <tr>
+          <td>{{ hv.hoc_vien__profile__ho_ten }}</td>
+          <td>
+            <a href="{% url 'danh_sach_buoi_tap' hv.hoc_vien %}"
+               class="btn btn-outline-warning btn-sm">Xem</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="2" class="py-3" style="color:#aaa;">Không có học viên nào.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

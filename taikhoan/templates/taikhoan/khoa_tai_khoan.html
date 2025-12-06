@@ -1,0 +1,170 @@
+{% extends base %}
+{% block title %}Khóa tài khoản{% endblock %}
+{% block content %}
+<style>
+  .lock-account-container {
+    max-width: 600px;
+    margin: 4rem auto;
+  }
+  .lock-card {
+    background: #121214;
+    border: 1px solid #2a2b2e;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+  .lock-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(220, 53, 69, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .lock-icon i {
+    font-size: 2.5rem;
+    color: #dc3545;
+  }
+  .lock-title {
+    color: #e0e0e0;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.75rem;
+  }
+  .lock-description {
+    color: #b0b0b0;
+    text-align: center;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  .warning-box {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .warning-box ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.25rem;
+    color: #e0e0e0;
+  }
+  .warning-box li {
+    margin-bottom: 0.5rem;
+  }
+  .form-label {
+    font-weight: 600;
+    color: #b0b0b0;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .form-control {
+    background: #1b1c1f;
+    border: 1px solid #2a2b2e;
+    color: #e0e0e0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+  }
+  .form-control:focus {
+    background: #1b1c1f;
+    border-color: #dc3545;
+    color: #e0e0e0;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+  }
+  .form-control::placeholder {
+    color: #6c757d;
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  .btn-danger:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.4);
+    color: #fff;
+  }
+  .btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #b0b0b0;
+    background: transparent;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  .btn-outline-secondary:hover {
+    background: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(108, 117, 125, 0.3);
+  }
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 576px) {
+    .button-group {
+      flex-direction: column-reverse;
+    }
+  }
+</style>
+
+<div class="lock-account-container">
+  <div class="lock-card">
+    <div class="lock-icon">
+      <i class="bi bi-lock-fill"></i>
+    </div>
+    
+    <h3 class="lock-title">Khóa tài khoản</h3>
+    
+    <p class="lock-description">
+      Bạn có chắc chắn muốn khóa tài khoản của mình không? Hành động này sẽ khiến bạn không thể đăng nhập cho đến khi được mở khóa.
+    </p>
+
+    <div class="warning-box">
+      <strong style="color: #dc3545;"><i class="bi bi-exclamation-triangle-fill me-2"></i>Lưu ý quan trọng:</strong>
+      <ul>
+        <li>Bạn sẽ không thể đăng nhập vào hệ thống</li>
+        <li>Tất cả dữ liệu của bạn vẫn được lưu trữ an toàn</li>
+        <li>Liên hệ quản trị viên để mở khóa tài khoản</li>
+      </ul>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      
+      <div class="mb-3">
+        <label class="form-label">
+          <i class="bi bi-chat-left-text me-2" style="color: #dc3545;"></i>Lý do khóa tài khoản <span style="color: #dc3545;">*</span>
+        </label>
+        {{ form.ly_do }}
+      </div>
+
+      <div class="button-group">
+        <a class="btn btn-outline-secondary" href="{% url 'taikhoan:ho_so' %}">
+          <i class="bi bi-arrow-left me-2"></i>Hủy bỏ
+        </a>
+        <button type="submit" class="btn btn-danger">
+          <i class="bi bi-lock-fill me-2"></i>Xác nhận khóa
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+{% endblock %}

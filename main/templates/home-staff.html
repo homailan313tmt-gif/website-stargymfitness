@@ -1,0 +1,41 @@
+
+{% extends "base-staff.html" %}{% load static %}{% block title %}Trang chủ | Star Gym Fitness{% endblock %}{% block content %}
+<style>
+.hero-wrapper{width:100vw;margin-left:calc(50% - 50vw);background:#000;position:relative;overflow:hidden;}
+.hero-wrapper::before{content:"";position:absolute;top:10%;left:5%;width:200px;height:200px;background:linear-gradient(135deg,rgba(255,215,0,0.05),transparent);border-radius:50%;filter:blur(60px);}
+.hero-wrapper::after{content:"";position:absolute;bottom:15%;left:8%;width:150px;height:150px;background:linear-gradient(135deg,rgba(255,215,0,0.03),transparent);border-radius:50%;filter:blur(50px);}
+.pattern-dots{position:absolute;top:50%;left:3%;width:120px;height:120px;opacity:0.04;background-image:radial-gradient(circle,#FFD700 2px,transparent 2px);background-size:20px 20px;}
+.hero-section{position:relative;display:flex;align-items:flex-start;justify-content:space-between;padding:3rem 5% 2rem;min-height:85vh;background:#000;overflow:visible;z-index:1;}
+.hero-section,.hero-section *{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;}
+.hero-text{position:relative;z-index:1;flex:1 1 38%;color:#fff;display:flex;flex-direction:column;justify-content:flex-start;margin-top:2.2rem;}
+.hero-text::before{content:"STAR";position:absolute;top:-20px;left:-10px;font-size:120px;font-weight:900;color:#FFD700;opacity:0.03;z-index:-1;letter-spacing:10px;}
+.hero-text h1{font-size:3.4rem;line-height:1.04;font-weight:900;margin-bottom:.9rem;white-space:nowrap;position:relative;z-index:1;}
+.hero-text h1::after{content:"";position:absolute;bottom:-15px;left:0;width:100px;height:3px;background:linear-gradient(90deg,#FFD700,rgba(255,215,0,0.3),transparent);}
+.hero-text p{font-size:1rem;color:#e0e0e0;max-width:520px;margin-bottom:.95rem;}
+.hero-cta{display:inline-flex;align-items:center;gap:.3rem;padding:.6rem 1.4rem;background:#FFD700;color:#000;font-weight:700;border-radius:4px;text-decoration:none;font-size:.9rem;line-height:1;max-width:max-content;text-transform:none;transition:.15s;box-shadow:0 4px 15px rgba(255,215,0,0.3);}
+.hero-cta:hover{filter:brightness(.95);transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,215,0,0.5);}
+.hero-image{position:relative;z-index:1;flex:1 1 60%;display:flex;align-items:center;justify-content:flex-end;}
+.hero-image::before{content:"";position:absolute;right:0;top:50%;transform:translateY(-50%);width:78%;height:100%;background:#FFD700;clip-path:polygon(100% 0,100% 100%,0 100%);z-index:-1;}
+.hero-image img{max-width:750px;width:100%;height:auto;object-fit:contain;display:block;position:relative;}
+@media (max-width:992px){.hero-section{flex-direction:column;align-items:flex-start;padding:2.6rem 6% 3rem;min-height:auto;}
+  .hero-text{margin-top:1.6rem;}
+  .hero-text h1{white-space:normal;}
+  .hero-image{justify-content:center;margin-top:1.2rem;width:100%;}
+  .hero-image::before{right:0;transform:translateY(-50%);width:72%;height:100%;}
+  .hero-image img{max-width:500px;}}
+@media (max-width:768px){.hero-text h1{font-size:2.6rem;}.hero-cta{padding:.5rem 1.2rem;font-size:.85rem;}}
+</style>
+<div class="hero-wrapper">
+  <div class="pattern-dots"></div>
+  <section class="hero-section">
+    <div class="hero-text">
+      <h1>Chào Nhân viên {{ user.username }}!</h1>
+      <p>Hãy cùng STAR GYM FITNESS quản lý và phục vụ khách hàng hiệu quả</p>
+      <a href="/bao-cao/khach-hang/" class="hero-cta">BẮT ĐẦU NGAY</a>
+    </div>
+    <div class="hero-image">
+      <img src="{% static 'images/home.png' %}" alt="Staff Star Gym">
+    </div>
+  </section>
+</div>
+{% endblock %}

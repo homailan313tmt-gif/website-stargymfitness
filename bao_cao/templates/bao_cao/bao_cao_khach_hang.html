@@ -1,0 +1,281 @@
+{% extends base %}
+{% block title %}Báo cáo khách hàng{% endblock %}
+{% block content %}
+<style>
+
+    :root {
+  --color-primary: #f7c948;
+  --color-text-light: #fff;
+  --color-text-secondary: #cfcfcf;
+  --color-dark-card: #222;
+  --color-darker-card: #1a1a1a;
+}
+/* --- 1. Tiêu đề Highlight (Page Title) --- */
+.page-title {
+  color:#fff;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  text-align:left;
+  text-transform: uppercase;
+}
+
+/* Thanh vàng nổi bật bên trái tiêu đề */
+.page-title::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 1.1em;
+  background-color: var(--color-primary);
+  margin-right: 15px;
+
+}
+
+
+  .report-container {
+    max-width: 100%px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  .page-header {
+    color: #e0e0e0;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+  }
+  .filter-section {
+    background: #121214;
+    border: 1px solid #2a2b2e;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .filter-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .filter-tab {
+    background: #1b1c1f;
+    border: 2px solid #2a2b2e;
+    color: #b0b0b0;
+    padding: 0.625rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .filter-tab:hover {
+    border-color: #ffc107;
+    color: #ffc107;
+    transform: translateY(-2px);
+  }
+  .filter-tab.active {
+    background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+    border-color: #ffc107;
+    color: #121214;
+  }
+  .filter-tab .badge {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .filter-tab.active .badge {
+    background: rgba(18, 18, 20, 0.3);
+    color: #121214;
+  }
+  .search-bar {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .search-input {
+    flex: 1;
+    background: #1b1c1f;
+    border: 1px solid #2a2b2e;
+    color: #e0e0e0;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    max-width: 400px;
+  }
+  .search-input:focus {
+    outline: none;
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.15);
+  }
+  .btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+    border: none;
+    color: #121214;
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .btn-warning:hover {
+    background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.4);
+  }
+  .btn-outline {
+    border: 2px solid #6c757d;
+    color: #b0b0b0;
+    background: transparent;
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-outline:hover {
+    background: #6c757d;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  .table-container {
+    background: #121214;
+    border: 1px solid #2a2b2e;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .table {
+    margin: 0;
+    width: 100%;
+    color: #e0e0e0;
+  }
+  .table thead th {
+    background: #1b1c1f;
+    border-bottom: 2px solid #ffc107;
+    color: #ffc107;
+    font-weight: 700;
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .table tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid #2a2b2e;
+    vertical-align: middle;
+  }
+  .table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .table tbody tr:hover {
+    background: #1b1c1f;
+  }
+  .btn-view {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid #ffc107;
+    color: #ffc107;
+    padding: 0.375rem 0.875rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+  .btn-view:hover {
+    background: #ffc107;
+    color: #121214;
+    transform: translateY(-1px);
+  }
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+  }
+  @media (max-width: 768px) {
+    .table-container {
+      overflow-x: auto;
+    }
+    .table {
+      min-width: 600px;
+    }
+  }
+</style>
+
+<div class="report-container">
+  <h3 class="page-title">{{ title }}</h3>
+
+  <div class="filter-section">
+    <div class="filter-tabs">
+      <a href="?loai=moi" class="filter-tab {% if loai == 'moi' %}active{% endif %}">
+        Khách hàng mới
+        <span class="badge">{{ tong_moi }}</span>
+      </a>
+      <a href="?loai=duy_tri" class="filter-tab {% if loai == 'duy_tri' %}active{% endif %}">
+        Đang hoạt động
+        <span class="badge">{{ tong_duy_tri }}</span>
+      </a>
+      <a href="?loai=da_khoa" class="filter-tab {% if loai == 'da_khoa' %}active{% endif %}">
+        Đã khóa
+        <span class="badge">{{ tong_da_khoa }}</span>
+      </a>
+    </div>
+
+    <form method="get" class="search-bar">
+      <input type="hidden" name="loai" value="{{ loai }}">
+      <input type="text" name="search" class="search-input" placeholder="Tìm kiếm theo username, họ tên, email..." value="{{ search }}">
+      <button type="submit" class="btn-warning">Tìm kiếm</button>
+      <a href="{% url 'bao_cao:khach_hang_csv' %}?loai={{ loai }}" class="btn-outline">Xuất CSV</a>
+    </form>
+  </div>
+
+  <div class="table-container">
+    {% if ds_khach %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 5%;">STT</th>
+            <th style="width: 15%;">Username</th>
+            <th style="width: 20%;">Họ và tên</th>
+            <th style="width: 20%;">Email</th>
+            <th style="width: 15%;">Ngày đăng ký</th>
+            {% if loai == 'da_khoa' %}
+              <th style="width: 15%;">Ngày khóa</th>
+              <th style="width: 25%;">Lý do</th>
+            {% endif %}
+            <th style="width: 10%;">Xem thêm</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for kh in ds_khach %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ kh.username }}</td>
+              <td>{{ kh.ho_ten }}</td>
+              <td>{{ kh.email }}</td>
+              <td>{{ kh.ngay_dang_ky }}</td>
+              {% if loai == 'da_khoa' %}
+                <td>{{ kh.khoa_luc }}</td>
+                <td>{{ kh.ly_do_khoa }}</td>
+              {% endif %}
+              <td>
+                <a href="{% url 'bao_cao:khach_hang_chi_tiet' kh.id %}" class="btn-view">Xem</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty-state">
+        <p>Không tìm thấy khách hàng nào</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

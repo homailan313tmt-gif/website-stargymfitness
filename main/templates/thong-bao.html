@@ -1,0 +1,52 @@
+{% extends 'base-customer.html' %}
+{% block content %}
+<style>
+                :root {
+  --color-primary: #f7c948;
+  --color-text-light: #fff;
+  --color-text-secondary: #cfcfcf;
+  --color-dark-card: #222;
+  --color-darker-card: #1a1a1a;
+}
+/* --- 1. Tiêu đề Highlight (Page Title) --- */
+.page-title {
+  color:#fff;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  text-align:left;
+  text-transform: uppercase;
+}
+
+/* Thanh vàng nổi bật bên trái tiêu đề */
+.page-title::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 1.1em;
+  background-color: var(--color-primary);
+  margin-right: 15px;
+
+}
+
+</style>
+
+<div style="max-width:100%;margin:50px auto;color:white;">
+  <h2 class="page-title">Thông báo</h2>
+  <hr style="border:1px solid #444;">
+
+  {% if thong_baos %}
+    {% for tb in thong_baos %}
+      <div style="padding:15px;border-bottom:1px solid #333;">
+        <b>{{ tb.tieu_de }}</b><br>
+        <p>{{ tb.noi_dung }}</p>
+        <small>{{ tb.thoi_gian|date:"H:i d/m/Y" }}</small>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Hiện chưa có thông báo nào.</p>
+  {% endif %}
+</div>
+{% endblock %}

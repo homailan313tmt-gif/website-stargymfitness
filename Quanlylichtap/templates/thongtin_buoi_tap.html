@@ -1,0 +1,150 @@
+{% extends "base-customer.html" %}
+{% load static %}
+
+{% block title %}Thông tin buổi tập{% endblock %}
+
+{% block content %}
+<style>
+/* ... (TOÀN BỘ STYLE GIỮ NGUYÊN) ... */
+    :root {
+  --color-primary: #f7c948;
+  --color-text-light: #fff;
+  --color-text-secondary: #cfcfcf;
+  --color-dark-card: #222;
+  --color-darker-card: #1a1a1a;
+}
+/* --- 1. Tiêu đề Highlight (Page Title) --- */
+.page-title {
+  color:#fff;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  text-align:left;
+  text-transform: uppercase;
+}
+
+/* Thanh vàng nổi bật bên trái tiêu đề */
+.page-title::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 1.1em;
+  background-color: var(--color-primary);
+  margin-right: 15px;
+
+}
+
+  .page-wrap{max-width:100%;margin:0 auto}
+  .title{color:#fff;font-size:32px;margin-bottom:22px;text-align:left}
+  .grid{display:grid;grid-template-columns:1.1fr 1fr;gap:30px}
+  .card-dark{background:#222;border-radius:12px;padding:22px}
+  .info-row{display:grid;grid-template-columns:200px 1fr;gap:18px;margin-bottom:16px}
+  .info-label{color:#cfcfcf}
+  .info-value{color:#fff}
+  .btn-gold{background:#f7c948;border:1px solid #f7c948;color:#111;padding:10px 18px;border-radius:10px}
+  .btn-gold:hover{filter:brightness(0.95)}
+  .btn-ghost{background:transparent;border:1px solid #666;color:#eee;padding:10px 16px;border-radius:10px}
+
+  /* Nút thêm ghi chú - vàng viền, nền trong suốt */
+  .btn-outline-gold {
+    color: #f7c948;
+    border: 1px solid #f7c948;
+    background: transparent;
+    border-radius: 20px;
+    font-weight: 600;
+    padding: 4px 14px;
+    transition: 0.3s;
+  }
+  .btn-outline-gold:hover {
+    background: #f7c948;
+    color: #111;
+  }
+
+  .note-title{color:#fff;font-weight:600;margin-bottom:10px;text-align:left}
+  .note-area{width:100%;height:220px;border-radius:12px;border:1px solid #ddd;background:#fff;padding:12px;resize:vertical}
+  .toolbar{display:flex;gap:10px;margin-top:12px}
+  @media (max-width: 992px){ .grid{grid-template-columns:1fr} }
+</style>
+
+<div class="page-wrap my-4">
+  <h1 class="page-title">Thông tin buổi tập</h1>
+
+  <div class="grid">
+
+    <div style="display:flex; flex-direction:column; gap:25px;">
+
+        <div class="card-dark">
+            <div class="info-row">
+                <div class="info-label">Ngày tập</div>
+                <div class="info-value">{{ buoi_tap.ngay_tap|date:"d-m-Y" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Bài tập</div>
+                <div class="info-value">{{ buoi_tap.bai_tap }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Trạng thái</div>
+                <div class="info-value">{{ buoi_tap.trang_thai }}</div>
+            </div>
+
+            <a href="{% url 'them_ghi_chu' buoi_tap.id %}"
+               class="btn btn-sm btn-outline-gold">Thêm ghi chú</a>
+
+            <a href="{% url 'lich_su_tap_luyen' %}"
+               style="margin-left:10px;color:#f1c40f;">Quay lại danh sách</a>
+        </div>
+
+        <div>
+            <h4 class="page-title" style="font-size: 24px; margin-bottom: 10px;">Lịch sử tập luyện</h4>
+            <div style="max-height: 400px; overflow-y: auto;">
+            {% for item in lich_su %}
+                <div class="card mb-3 p-3" style="background:#1e1e1e;padding:20px;border-radius:10px;color:white">
+                    <b>{{ item.ngay_tap|date:"M d, Y" }}</b> - {{ item.bai_tap }} ({{ item.trang_thai }})
+
+                    {% if item.nx %}
+                    <div class="mt-2">
+                        <b>Nhận xét:</b> {{ item.nx.ngay_nhan_xet|date:"d/m/Y H:i" }}<br>
+                        {{ item.nx.noi_dung }}
+                    </div>
+                    {% else %}
+                    <div class="mt-2" style="color:white">
+                        <b>Nhận xét:</b> Chưa có
+                    </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-dark">
+      <h4 style="margin:6px 0 10px 0">Nhận xét của Huấn luyện viên</h4>
+
+      <textarea readonly
+        class="textarea-dark"
+        style="background-color:#2b2b2b; color:#fff; border:1px solid #444;
+               width:100%; min-height:160px; border-radius:10px; padding:10px;"
+        placeholder="Chưa có nhận xét">
+{% if buoi_tap.nhanxet %}{{ buoi_tap.nhanxet.noi_dung }}{% endif %}
+      </textarea>
+
+      {% if buoi_tap.nhanxet and buoi_tap.nhanxet.hinh_anh.all %}
+        <h4 style="margin-top:18px; color:#f7c948;">Hình ảnh từ HLV</h4>
+
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+          {% for img in buoi_tap.nhanxet.hinh_anh.all %}
+            <img src="{{ img.anh.url }}"
+                 style="width:110px;height:110px;object-fit:cover;
+                        border-radius:10px;border:1px solid #444;">
+          {% endfor %}
+        </div>
+      {% endif %}
+
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

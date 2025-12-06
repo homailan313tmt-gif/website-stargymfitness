@@ -1,0 +1,103 @@
+/* * dark-theme-style.css
+ * Bộ CSS đồng bộ cho các thành phần UI chung: Tiêu đề Highlight, Bố cục Container, Card và Buttons.
+ * File này giả định màu nền chính của trang đã được định nghĩa ở nơi khác.
+ */
+
+/* --- 1. Biến màu (Variables) --- */
+:root {
+  /* Giữ lại các biến màu UI cần thiết */
+  --color-card-bg: #222;        /* Nền thẻ nội dung (được dùng trong .card-dark) */
+  --color-primary: #f7c948;     /* Màu vàng nổi bật (Gold) */
+  --color-text-light: #fff;     /* Màu chữ sáng */
+  --color-text-secondary: #cfcfcf; /* Màu chữ phụ/nhẹ */
+  --font-base: sans-serif;
+  --max-width: 1200px;
+}
+
+/* --- 2. Bố cục Nội dung (Content Layout) --- */
+/* Vùng bao bọc nội dung, giới hạn chiều rộng và căn giữa */
+.page-wrap {
+  max-width: var(--max-width);
+  margin: 0 auto; /* Căn giữa */
+  padding: 40px 20px; /* Đệm trên dưới 40px, trái phải 20px (cho mobile) */
+}
+
+/* --- 3. Thẻ Nội dung (Card) --- */
+.card-dark {
+  background: var(--color-card-bg);
+  color: var(--color-text-light); /* Đảm bảo màu chữ bên trong Card là màu sáng */
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* --- 4. Tiêu đề Highlight (Page Title) --- */
+.page-title-section {
+  color: var(--color-text-light);
+  font-size: 36px; /* Kích thước lớn */
+  font-weight: 700;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+
+/* Thanh vàng nổi bật bên trái tiêu đề (Highlight Bar) */
+.page-title-section::before {
+  content: '';
+  display: block;
+  width: 6px; /* Chiều rộng thanh nổi bật */
+  height: 1.1em; /* Chiều cao tương đương với chiều cao font */
+  background-color: var(--color-primary);
+  margin-right: 15px;
+  border-radius: 3px; /* Bo góc nhẹ cho thanh */
+}
+
+/* --- 5. Buttons (Nút Bấm) --- */
+.toolbar {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+/* Nút Chính (Primary - Vàng như 'Chỉnh sửa') */
+.btn-primary {
+  background: var(--color-primary);
+  border: none;
+  color: #111; /* Màu chữ đen đậm */
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.9);
+}
+
+/* Nút Phụ (Secondary - Nền trong suốt/Ghost như 'Quay lại danh sách') */
+.btn-secondary {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  padding: 10px 20px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-secondary:hover {
+  color: var(--color-primary); /* Đổi màu sang vàng khi hover */
+}
+
+/* --- 6. Responsive cơ bản --- */
+@media (max-width: 768px) {
+  .page-title-section {
+    font-size: 28px;
+  }
+  .page-wrap {
+    padding: 20px 15px;
+  }
+}
