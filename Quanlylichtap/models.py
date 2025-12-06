@@ -21,7 +21,6 @@ class BuoiTap(models.Model):
     cam_nhan = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        # Kiểm tra profile tồn tại trước khi dùng ho_ten
         if self.hoc_vien.profile:
             ten_hoc_vien = self.hoc_vien.profile.ho_ten or "Chưa đặt tên"
         else:

@@ -8,9 +8,7 @@ from .models import PhanHoi, AnhPhanHoi
 from .forms import PhanHoiForm
 
 
-# =======================
-# GỬI PHẢN HỒI
-# =======================
+
 @login_required
 @role_required('customer')
 def gui_phan_hoi(request):
@@ -24,7 +22,7 @@ def gui_phan_hoi(request):
             ph.user = request.user
             ph.save()
 
-            # Lưu nhiều ảnh
+
             for f in request.FILES.getlist('anh'):
                 AnhPhanHoi.objects.create(phan_hoi=ph, anh=f)
 
@@ -44,9 +42,6 @@ def gui_phan_hoi(request):
 
 
 
-# =======================
-# THEO DÕI
-# =======================
 @login_required
 @role_required('customer')
 def theo_doi(request):
@@ -72,9 +67,7 @@ def theo_doi(request):
     })
 
 
-# =======================
-# CHI TIẾT PHẢN HỒI
-# =======================
+
 @login_required
 @role_required('customer')
 def chi_tiet(request, pk):
@@ -82,15 +75,13 @@ def chi_tiet(request, pk):
     return render(request, 'hotro/chitiet.html', {'ph': ph})
 
 
-# =======================
-# CHỈNH SỬA PHẢN HỒI
-# =======================
+
 @login_required
 @role_required('customer')
 def chinh_sua(request, pk):
     ph = get_object_or_404(PhanHoi, pk=pk)
 
-    # Không cho sửa phản hồi của người khác
+
     if ph.user != request.user:
         return redirect("theo_doi")
 
@@ -100,9 +91,7 @@ def chinh_sua(request, pk):
         if form.is_valid():
             form.save()
 
-            # =============================
-            # 🔥 XÓA ẢNH CŨ
-            # =============================
+
             delete_str = request.POST.get("delete_list", "")
             delete_ids = [x for x in delete_str.split(",") if x.strip().isdigit()]
 
@@ -110,7 +99,7 @@ def chinh_sua(request, pk):
                 try:
                     img = AnhPhanHoi.objects.get(id=img_id)
 
-                    # Xóa file thật trong media
+
                     if img.anh and default_storage.exists(img.anh.name):
                         default_storage.delete(img.anh.name)
 
@@ -119,9 +108,7 @@ def chinh_sua(request, pk):
                 except AnhPhanHoi.DoesNotExist:
                     pass
 
-            # =============================
-            # 🔥 LƯU ẢNH MỚI
-            # =============================
+
             for f in request.FILES.getlist("anh"):
                 AnhPhanHoi.objects.create(phan_hoi=ph, anh=f)
 

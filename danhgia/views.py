@@ -11,21 +11,18 @@ from taikhoan.models import KhachHang
 def review(request):
     da_gui = False
 
-    # Lấy hoặc tạo khách hàng từ profile
     kh, _ = KhachHang.objects.get_or_create(profile=request.user.profile)
 
     if request.method == "POST":
         form = DanhGiaForm(request.POST)
 
         if form.is_valid():
-            # Lưu đánh giá trước
             dg = form.save(commit=False)
             dg.khach_hang = kh
             dg.user = request.user
             dg.nguoi_tao = request.user.profile
             dg.save()
 
-            # ----- LƯU NHIỀU ẢNH -----
             images = request.FILES.getlist("anh_minh_chung")
             for img in images:
                 DanhGiaImage.objects.create(danh_gia=dg, image=img)

@@ -12,8 +12,5 @@ urlpatterns = [
          views.chi_tiet_tap,
          name='chi_tiet_tap'),
 
-
-
-
     path('xoa-anh/<int:anh_id>/', views.xoa_anh_cam_nhan, name='xoa_anh_cam_nhan'),
 ]

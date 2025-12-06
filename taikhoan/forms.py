@@ -27,36 +27,31 @@ class FormDangNhap(AuthenticationForm):
 
 
 class FormHoSo(forms.Form):
-    """Form chung cho tất cả role"""
-    # Thông tin chung
+
     ho_ten = forms.CharField(label='Họ và tên', max_length=150, required=False)
     so_dien_thoai = forms.CharField(label='Số điện thoại', max_length=20, required=False)
     email = forms.EmailField(label='Email', max_length=254, required=False)
 
-    # Khách hàng
     muc_tieu = forms.CharField(label='Mục tiêu tập luyện', max_length=255, required=False)
     chieu_cao_cm = forms.IntegerField(label='Chiều cao (cm)', min_value=80, max_value=250, required=False)
     can_nang_kg = forms.DecimalField(label='Cân nặng (kg)', min_value=20, max_value=350, max_digits=5, decimal_places=2,
                                      required=False)
 
-    # Huấn luyện viên
     chung_chi = forms.CharField(label='Chứng chỉ', max_length=255, required=False)
     kinh_nghiem_nam = forms.IntegerField(label='Kinh nghiệm (năm)', min_value=0, max_value=80, required=False)
     gioi_thieu = forms.CharField(label='Giới thiệu', widget=forms.Textarea(attrs={'rows': 3}), required=False)
 
-    # Nhân viên
+
     phong_ban = forms.CharField(label='Phòng ban', max_length=100, required=False)
     ghi_chu = forms.CharField(label='Ghi chú', max_length=255, required=False)
 
     def __init__(self, role=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Thêm class form-control cho tất cả field
         for field in self.fields.values():
             css = field.widget.attrs.get("class", "")
             field.widget.attrs["class"] = (css + " form-control").strip()
 
-        # Ẩn field không cần thiết theo role
         if role == "customer":
             self._hide_fields(['chung_chi', 'kinh_nghiem_nam', 'gioi_thieu', 'phong_ban', 'ghi_chu'])
         elif role == "trainer":
@@ -65,7 +60,7 @@ class FormHoSo(forms.Form):
             self._hide_fields(['muc_tieu', 'chieu_cao_cm', 'can_nang_kg', 'chung_chi', 'kinh_nghiem_nam', 'gioi_thieu'])
 
     def _hide_fields(self, field_names):
-        """Ẩn các field không cần thiết"""
+
         for name in field_names:
             if name in self.fields:
                 self.fields[name].widget = forms.HiddenInput()

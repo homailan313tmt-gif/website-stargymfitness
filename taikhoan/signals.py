@@ -16,6 +16,6 @@ def delete_old_avatar_on_change(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Profile)
 def delete_avatar_on_delete(sender, instance, **kwargs):
-    """Xóa ảnh khi xóa Profile"""
+
     if instance.anh_dai_dien:
         instance.anh_dai_dien.delete(save=False)

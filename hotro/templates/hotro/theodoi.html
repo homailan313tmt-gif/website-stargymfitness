@@ -11,7 +11,7 @@
   --color-dark-card: #222;
   --color-darker-card: #1a1a1a;
 }
-/* --- 1. Tiêu đề Highlight (Page Title) --- */
+
 .page-title {
   color:#fff;
   font-size: 40px;
@@ -23,7 +23,7 @@
   text-transform: uppercase;
 }
 
-/* Thanh vàng nổi bật bên trái tiêu đề */
+
 .page-title::before {
   content: '';
   display: block;
@@ -33,7 +33,7 @@
   margin-right: 15px;
 
 }
-/* BẢNG DARK-GOLD */
+
 .table-dark-gold {
   width: 100%;
   border-collapse: collapse;
@@ -74,7 +74,7 @@
   color: #111;
 }
 
-/* Nút Trở về */
+
 .btn-back {
   color: #111;
   background-color: #ffcc33;
@@ -96,7 +96,7 @@
 <div class="page-wrap my-4">
   <h2 class="page-title">Theo dõi phản hồi</h2>
 
-    <!-- FORM LỌC -->
+
   <div class="d-flex justify-content-end mb-4">
     <form method="get" class="d-flex">
       <select name="status"
@@ -109,7 +109,7 @@
       <button class="btn btn-warning fw-semibold px-4">Lọc</button>
     </form>
   </div>
-  <!-- KHUNG BẢNG -->
+
   <div class="p-3" style="background-color:#0d0d0d; border-radius:12px; box-shadow:0 0 15px rgba(255,215,0,0.15);">
     <table class="table-dark-gold text-center" style="width:100%;">
       <thead>
@@ -145,10 +145,10 @@
     </table>
   </div>
 
-  <!-- Nút Trở về ở giữa -->
+
   <div class="mt-4 d-flex justify-content-center">
     <a href="{% url 'gui_phan_hoi' %}" class="btn-back">Trở về</a>
   </div>
 </div>
-
+</div>
 {% endblock %}

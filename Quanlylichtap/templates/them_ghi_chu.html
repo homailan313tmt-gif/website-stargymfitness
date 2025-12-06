@@ -378,7 +378,7 @@
 </div>
 
 <script>
-// ... (TOÀN BỘ CODE JAVASCRIPT GIỮ NGUYÊN) ...
+
 let newImages = [];
 let deleteList = [];
 
@@ -387,10 +387,10 @@ const previewNew = document.getElementById("previewNew");
 const deleteInput = document.getElementById("delete_list");
 const fileNameText = document.getElementById("file-name");
 
-/* MULTI UPLOAD */
+
 input.addEventListener("change", () => {
 
-    // push thêm ảnh mới vào mảng
+
     for (let f of input.files) newImages.push(f);
 
     renderPreview();
@@ -400,7 +400,7 @@ input.addEventListener("change", () => {
         newImages.length > 0 ? `${newImages.length} ảnh đã chọn` : "Chưa có ảnh nào";
 });
 
-/* Render preview */
+
 function renderPreview() {
     previewNew.innerHTML = "";
 
@@ -431,14 +431,14 @@ function renderPreview() {
     });
 }
 
-/* Giữ tất cả ảnh trong input để submit */
+
 function refreshInput() {
     const dt = new DataTransfer();
     newImages.forEach(f => dt.items.add(f));
     input.files = dt.files;
 }
 
-/* Xóa ảnh cũ */
+
 function deleteOldImg(id) {
     if (!confirm("Xóa ảnh này?")) return;
 
@@ -450,7 +450,7 @@ function deleteOldImg(id) {
     setTimeout(() => box.remove(), 200);
 }
 
-/* Modal ảnh */
+
 function openImgModal(src) {
     document.getElementById("modalImg").src = src;
     document.getElementById("imgModal").style.display = "flex";

@@ -61,12 +61,10 @@
           <td>{% if ph.trang_thai == 'Chưa xử lý' %}<span class="badge bg-danger">Chưa xử lý</span>{% else %}<span class="badge bg-success">Đã xử lý</span>{% endif %}</td>
           <td>
     {% if ph.so_lan_phan_hoi and ph.so_lan_phan_hoi > 1 %}
-        <!-- Màu xám -->
         <span class="badge" style="background:#555;color:#fff;">
             Đã phản hồi {{ ph.so_lan_phan_hoi }} lần
         </span>
     {% else %}
-        <!-- Màu vàng -->
         <span class="badge" style="background:#ffcc33;color:#111;">
             Phản hồi lần đầu
         </span>

@@ -7,7 +7,6 @@
   --color-dark-card: #1a1a1a;
 }
 
-/* ===== TIÊU ĐỀ ===== */
 .page-title {
   color:#fff;
   font-size:40px;
@@ -25,8 +24,6 @@
   margin-right:15px;
 }
 
-/* ===== FORM BOX ===== */
-
 
 .form-box label {
   font-size:1.05rem;
@@ -35,7 +32,6 @@
   display:block;
 }
 
-/* ===== INPUT/SELECT/TEXTAREA ===== */
 .form-box textarea,
 .form-box select,
 .form-box input[type="text"] {
@@ -55,7 +51,6 @@
   outline:none;
 }
 
-/* ===== BUTTON ===== */
 .btn-gym {
     background-color:#ffcc33;
     color:#111 !important;
@@ -72,7 +67,6 @@
     color:#ffcc33 !important;
 }
 
-/* ===== UPLOAD ===== */
 .hidden-file-input { display:none !important; }
 
 .custom-file-box {
@@ -88,7 +82,6 @@
   font-style:italic;
 }
 
-/* ===== ẢNH & NÚT XOÁ ===== */
 .img-wrapper img {
   width:120px;
   height:120px;
@@ -118,7 +111,6 @@
   align-items:center;
 }
 
-/* ===== MODAL PHÓNG TO ẢNH ===== */
 .img-modal {
     display:none;
     position:fixed;
@@ -174,14 +166,13 @@
     </small>
 </div>
 
-            <!-- Nội dung -->
+
             <div class="mb-3">
                 <label class="form-label">Nội dung chi tiết:</label>
                 <textarea name="noi_dung" rows="4"
   class="form-control bg-dark text-light border-secondary">{{ form.noi_dung.value }}</textarea>
 
 
-<!-- KHỐI UPLOAD ẢNH -->
 <div class="custom-file-box" style="margin-top: 18px;">
     <button type="button" class="btn-gym"
             onclick="document.getElementById('anh').click();">
@@ -191,12 +182,10 @@
     <input type="file" name="anh" accept="image/*" multiple id="anh" class="hidden-file-input">
 </div>
 
-    <!-- Preview ảnh mới -->
     <div id="preview-box" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;"></div>
 
     <input type="hidden" name="delete_list" id="delete_list">
 
-    <!-- ẢNH CŨ -->
     {% if ph.ds_anh.all %}
     <label class="mt-3">Ảnh hiện tại:</label>
     <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:8px;">
@@ -218,7 +207,6 @@
 </div>
 
 
-<!-- MODAL ẢNH -->
 <div id="imgModal" class="img-modal" onclick="closeImgModal(event)">
     <img id="modalImg">
 </div>
@@ -277,7 +265,6 @@ function refreshFileInput() {
     input.files = dt.files;
 }
 
-/* XOÁ ẢNH CŨ */
 function deleteImage(id) {
     if (!confirm("Xóa ảnh này?")) return;
     const box = document.getElementById("img-wrap-" + id);
@@ -288,7 +275,6 @@ function deleteImage(id) {
     deleteInput.value = deleteList.join(",");
 }
 
-/* MODAL PHÓNG TO ẢNH */
 function openImgModal(src) {
     document.getElementById("modalImg").src = src;
     document.getElementById("imgModal").style.display = "flex";

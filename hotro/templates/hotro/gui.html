@@ -124,7 +124,6 @@
   letter-spacing:1px;
 }
 
-/* 🔥 HIDE SCROLLBAR của textarea */
 textarea::-webkit-scrollbar {
     display: none;
 }
@@ -133,27 +132,24 @@ textarea {
     -ms-overflow-style: none;
 }
 
-/* MATCH SELECT STYLE WITH TEXTAREA */
-/* Ô LOẠI PHẢN HỒI – giống 100% textarea */
 .support-card select {
-    background-color: #2b2e31 !important;   /* nền tối giống textarea */
+    background-color: #2b2e31 !important;
     color: #fff !important;
-    border: 1px solid #555 !important;      /* border giống textarea */
+    border: 1px solid #555 !important;
     border-radius: 6px !important;
-    padding: 10px 12px !important;          /* padding match với textarea */
-    height: auto !important;                /* để tự giãn theo text */
-    min-height: 42px !important;            /* fix chiều cao default */
-    appearance: none !important;            /* bỏ style mặc định của trình duyệt */
+    padding: 10px 12px !important;
+    height: auto !important;
+    min-height: 42px !important;
+    appearance: none !important;
     outline: none !important;
 }
 
-/* Khi focus – giống textarea luôn */
 .support-card select:focus {
-    border-color: #555 !important;          /* như textarea */
+    border-color: #555 !important;
     box-shadow: none !important;
 }
 
-/* MODAL PHÓNG TO ẢNH */
+
 .modal-img {
     display: none;
     position: fixed;
@@ -178,9 +174,7 @@ textarea {
     to { transform: scale(1); opacity: 1; }
 }
 
-/* ========== STYLE Y CHANG REVIEW GẦN ĐÂY ========== */
 
-/* CARD MÁY – đồng bộ review-card */
 .machine-card {
     background: rgba(20,20,20,0.95);
     border-radius: 12px;
@@ -197,7 +191,6 @@ textarea {
     box-shadow: 0 0 22px rgba(255,215,0,0.25);
 }
 
-/* ẢNH – giống .review-thumb */
 .machine-card img {
     width: 100%;
     height: 130px;
@@ -212,7 +205,7 @@ textarea {
     box-shadow: 0 0 12px rgba(255,255,255,0.35);
 }
 
-/* TEXT */
+
 .machine-name {
     margin-top: 10px;
     font-weight: 7100;
@@ -226,7 +219,7 @@ textarea {
     margin-top: 4px;
 }
 
-/* GRID – thu nhỏ gap giống bố cục review hơn */
+
 .machine-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -234,7 +227,6 @@ textarea {
     margin-top: 5px;
 }
 
-/* SCROLL – giống review-scroll */
 .machine-scroll {
     max-height: 540px;
     overflow-y: auto;
@@ -256,7 +248,6 @@ textarea {
     background: #1a1a1a;
 }
 
-/* BẮT 2 CỘT CAO BẰNG */
 .support-left,
 .support-right {
     display: flex;
@@ -264,7 +255,7 @@ textarea {
 }
 
 
-</style><!-- NEW Loading screen -->
+</style>
 
 
 <div id="loading-overlay">Đang gửi phản hồi...</div>
@@ -276,16 +267,14 @@ textarea {
     <p class="text-secondary">Gửi phản hồi của bạn để Star Gym Fitness hỗ trợ tốt hơn</p>
   </div>
 
-  <!-- ========== 2 COLUMN LAYOUT ========== -->
   <div class="support-layout">
 
-      <!-- LEFT -->
       <div class="support-card support-left" id="leftBlock">
 
         <form id="supportForm" method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <!-- Loại phản hồi -->
+
             <div class="mb-3">
                 <label class="form-label">Loại phản hồi:</label>
                 <div>{{ form.loai }}</div>
@@ -294,7 +283,7 @@ textarea {
                 </small>
             </div>
 
-            <!-- Nội dung -->
+
             <div class="mb-3">
                 <label class="form-label">Nội dung phản hồi:</label>
                 <textarea name="noi_dung" rows="4"
@@ -309,7 +298,7 @@ textarea {
                
             </div>
 
-            <!-- Upload ảnh -->
+
             <div class="mb-4">
                 <label class="form-label mb-2">Đính kèm ảnh (tuỳ chọn):</label>
 
@@ -327,7 +316,7 @@ textarea {
                      style="display:flex; flex-wrap:wrap; gap:10px; margin-top:15px;"></div>
             </div>
 
-            <!-- Buttons -->
+
             <div class="d-flex justify-content-center gap-3">
               <button class="btn btn-warning fw-semibold px-4" type="submit">Gửi</button>
               <a href="{% url 'gui_phan_hoi' %}" class="btn btn-outline-light px-4">Hủy</a>
@@ -338,7 +327,7 @@ textarea {
    style="text-decoration:underline;">
    Theo dõi phản hồi
 </a>
-            <!-- NEW: Extra support info -->
+
             <div class="mt-4 text-secondary" style="font-size:14px;">
               <p class="mb-1"><strong style="color:#f7c948;">Hotline hỗ trợ nhanh:</strong> 0931 544 886</p>
               <p class="mb-1"><strong style="color:#f7c948;">Email tiếp nhận:</strong> stargymfitness@gmail.com</p>
@@ -349,14 +338,14 @@ textarea {
 
       </div>
 
-      <!-- RIGHT (y nguyên) -->
+
       <div class="support-card support-right" id="rightBlock">
         <h4 class="text-warning text-center mb-3">Thiết bị tập luyện</h4>
 
 <div class="machine-scroll">
         <div class="machine-grid">
 
-            <!-- MÁY (giữ nguyên toàn bộ) -->
+
             <div class="machine-card" onclick="openImgModal('/media/anhmaytap/may-tap-toan-than.png')">
     <img src="/media/anhmaytap/may-tap-toan-than.png">
     <div class="machine-name">Máy tập toàn thân</div>
@@ -432,28 +421,25 @@ textarea {
 </div>
 
 
-<!-- MODAL PHÓNG TO ẢNH -->
 <div id="imgModal" class="modal-img" onclick="closeImgModal(event)">
     <img id="imgModalContent" class="modal-img-content">
 </div>
 
 <script>
-/* ============================================
-   🔥 MULTIPLE FILE HANDLING + PREVIEW + REMOVE
-   ============================================ */
+
 let newImages = [];
 const input2 = document.getElementById("anh_minh_chung");
 const previewBox2 = document.getElementById("preview-box");
 const fileNameText2 = document.getElementById("file-name");
 
-/* Khi chọn ảnh từ máy */
+
 input2.addEventListener("change", () => {
     for (let file of input2.files) newImages.push(file);
     renderPreview();
     refreshInput();
 });
 
-/* Tạo khung preview từng ảnh */
+
 function renderPreview() {
     previewBox2.innerHTML = "";
 
@@ -485,16 +471,14 @@ function renderPreview() {
         newImages.length ? `${newImages.length} ảnh đã chọn` : "Chưa có ảnh nào";
 }
 
-/* Làm lại input.files */
+
 function refreshInput() {
     const dt = new DataTransfer();
     newImages.forEach(f => dt.items.add(f));
     input2.files = dt.files;
 }
 
-/* ============================================
-   🔥 MODAL PHÓNG TO ẢNH (dùng chung với máy tập)
-   ============================================ */
+
 function openImgModal(src) {
     document.getElementById("imgModal").style.display = "flex";
     document.getElementById("imgModalContent").src = src;

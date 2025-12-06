@@ -37,19 +37,19 @@ class Profile(models.Model):
 
     @property
     def display_name(self):
-        """Tên hiển thị"""
+
         return self.ho_ten or self.user.get_full_name() or self.user.username
 
     @property
     def avatar_url(self):
-        """URL avatar"""
+
         try:
             return self.anh_dai_dien.url if self.anh_dai_dien else ""
         except:
             return ""
 
     def update_info(self, data, files=None):
-        """Cập nhật thông tin profile"""
+
         self.ho_ten = data.get("ho_ten", self.ho_ten) or ""
         self.so_dien_thoai = data.get("so_dien_thoai", self.so_dien_thoai) or ""
 
@@ -63,7 +63,7 @@ class Profile(models.Model):
         self.save()
 
     def update_role_data(self, role, data):
-        """Cập nhật dữ liệu theo role"""
+
         if role == "customer":
             kh, _ = KhachHang.objects.get_or_create(profile=self)
             kh.muc_tieu = data.get("muc_tieu", kh.muc_tieu) or ""
@@ -83,7 +83,7 @@ class Profile(models.Model):
             nv.save()
 
     def to_dict(self):
-        """Convert sang dict"""
+
         kh = getattr(self, "khach_hang", None)
         hlv = getattr(self, "huan_luyen_vien", None)
         nv = getattr(self, "nhan_vien", None)
@@ -112,7 +112,6 @@ class KhachHang(models.Model):
     chieu_cao_cm = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     can_nang_kg = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     goi_tap = models.CharField(max_length=100, blank=True)
-    ngay_het_han = models.DateField(null=True, blank=True)
     huan_luyen_vien = models.ForeignKey("taikhoan.HuanLuyenVien", on_delete=models.SET_NULL, null=True, blank=True, related_name="hoc_vien_quan_ly")
 
     def __str__(self):

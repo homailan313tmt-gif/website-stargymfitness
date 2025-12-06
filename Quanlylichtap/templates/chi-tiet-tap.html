@@ -2,7 +2,6 @@
 {% block content %}
 
 <style>
-/* ... (Style giữ nguyên) ... */
 :root {
   --color-primary: #f7c948;
   --color-dark-card: #1a1a1a;
@@ -215,7 +214,7 @@
 </style>
 
 <script>
-// ... (TOÀN BỘ CODE JAVASCRIPT GIỮ NGUYÊN) ...
+
 let newImages = [];
 let deleteList = [];
 
@@ -232,7 +231,6 @@ const btnEdit = document.getElementById("btn-edit");
 const btnCancel = document.getElementById("btn-cancel");
 
 
-/* ==================== MULTI SELECT NEW IMAGE ==================== */
 if (input) {
     input.addEventListener("change", () => {
         for (let f of input.files) newImages.push(f);
@@ -242,7 +240,6 @@ if (input) {
 }
 
 
-/* ==================== RENDER PREVIEW ==================== */
 function renderPreview() {
     preview.innerHTML = "";
 
@@ -280,7 +277,6 @@ function renderPreview() {
 }
 
 
-/* ==================== UPDATE FILE INPUT ==================== */
 function refreshFileInput() {
     const dt = new DataTransfer();
     newImages.forEach(f => dt.items.add(f));
@@ -288,7 +284,6 @@ function refreshFileInput() {
 }
 
 
-/* ==================== DELETE OLD IMAGE ==================== */
 function deleteImage(id) {
     if (!confirm("Xóa ảnh này?")) return;
 
@@ -305,7 +300,6 @@ function deleteImage(id) {
 }
 
 
-/* ==================== SHOW / HIDE FORM ==================== */
 if (btnAdd)
     btnAdd.onclick = () => {
         formBox.style.display = "block";

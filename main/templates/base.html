@@ -120,11 +120,11 @@
     body {
         display: flex;
         flex-direction: column;
-        min-height: 100vh; /* đảm bảo toàn màn hình */
+        min-height: 100vh;
     }
 
     main {
-        flex: 1; /* chiếm khoảng trống còn lại để đẩy footer xuống cuối */
+        flex: 1;
     }
 
 </style>
@@ -194,15 +194,12 @@ document.addEventListener("DOMContentLoaded", function() {
   const notifBadge = document.getElementById("notifBadge");
   const notifButton = document.getElementById("btnNotif");
 
-  // Giả lập có thông báo mới (đặt biến này thành true/false để test)
   let hasNewNotification = true;
 
-  // Nếu có thông báo mới thì hiển thị chấm đỏ
   if (hasNewNotification) {
     notifBadge.style.display = "inline";
   }
 
-  // Khi người dùng bấm chuông => xem thông báo => ẩn dấu đỏ
   notifButton.addEventListener("click", function() {
     if (notifBadge) {
       notifBadge.style.display = "none";

@@ -9,7 +9,7 @@
   --color-border: #333;
 }
 
-/* ===== TIÊU ĐỀ ===== */
+
 .page-title {
   color:#fff;
   font-size: 40px;
@@ -28,17 +28,16 @@
   margin-right: 15px;
 }
 
-/* ===== BUTTON STYLE CHUNG ===== */
 .btn-gym {
     background-color: #ffcc33;
     color: #111 !important;
     border: 1px solid #ffcc33;
     padding: 8px 22px;
     border-radius: 6px;
-    font-weight: 700;          /* IN ĐẬM */
-    text-decoration: none !important;   /* KHÔNG GẠCH CHÂN */
+    font-weight: 700;
+    text-decoration: none !important;
     transition: 0.25s ease;
-    margin: 0 10px;            /* KHOẢNG CÁCH 2 NÚT */
+    margin: 0 10px;
 }
 
 .btn-gym:hover {
@@ -47,7 +46,6 @@
     border-color: #ffcc33;
 }
 
-/* ===== MODAL PHÓNG TO ẢNH ===== */
 .img-modal {
     display: none;
     position: fixed;
@@ -98,13 +96,11 @@
       <p><b>Ảnh đính kèm:</b> (Không có ảnh)</p>
   {% endif %}
 
-  <!-- ===== NÚT HÀNH ĐỘNG ===== -->
+
   <div class="mt-4 d-flex justify-content-center">
 
-      <!-- NÚT TRỞ VỀ -->
       <a href="{% url 'gui_phan_hoi' %}" class="btn-gym">Trở về</a>
 
-      <!-- NÚT CHỈNH SỬA KHIẾU NẠI -->
       <a href="{% url 'chinh_sua' ph.id %}" class="btn-gym">Chỉnh sửa</a>
 
   </div>
@@ -112,7 +108,6 @@
 </div>
 
 
-<!-- ===== MODAL PHÓNG TO ẢNH ===== -->
 <div id="imgModal" class="img-modal" onclick="closeImgModal(event)">
     <img id="modalImg">
 </div>

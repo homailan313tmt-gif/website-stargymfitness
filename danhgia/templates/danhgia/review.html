@@ -158,16 +158,13 @@
     <p class="text-secondary">Hãy chia sẻ trải nghiệm của bạn để Star Gym Fitness phục vụ tốt hơn</p>
   </div>
 
-  <!-- ⭐⭐ 2 CỘT ⭐⭐ -->
   <div class="review-layout">
 
-      <!-- ================= FORM (CỘT TRÁI) ================= -->
       <div class="review-card review-left">
 
         <form method="post" enctype="multipart/form-data" class="text-light text-start mx-auto review-form">
             {% csrf_token %}
 
-            <!-- SAO 1-->
             <div class="mb-3 d-flex align-items-center justify-content-between">
               <label class="form-label mb-0">Đánh giá chung:</label>
               <div class="rating-group" id="rating-chung">
@@ -178,7 +175,6 @@
               </div>
             </div>
 
-            <!-- SAO 2 -->
             <div class="mb-3 d-flex align-items-center justify-content-between">
               <label class="form-label mb-0">Thái độ phục vụ:</label>
               <div class="rating-group" id="rating-phucvu">
@@ -189,7 +185,6 @@
               </div>
             </div>
 
-            <!-- SAO 3 -->
             <div class="mb-3 d-flex align-items-center justify-content-between">
               <label class="form-label mb-0">Chất lượng dịch vụ:</label>
               <div class="rating-group" id="rating-chatluong">
@@ -200,7 +195,6 @@
               </div>
             </div>
 
-            <!-- NHẬN XÉT -->
             <div class="mb-4">
               <label class="form-label mb-2">Nhận xét chi tiết:</label>
               <textarea name="nhan_xet" class="form-control bg-dark text-light border-secondary"
@@ -213,7 +207,6 @@
               {% endif %}
             </div>
 
-            <!-- ================= UPLOAD ẢNH GIỐNG GUI.HTML ================= -->
             <div class="mb-4">
               <label class="form-label mb-2">Đính kèm ảnh (tuỳ chọn):</label>
 
@@ -233,7 +226,6 @@
               <div id="preview-box" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
             </div>
 
-            <!-- BUTTON -->
             <div class="d-flex justify-content-center gap-3 mt-3">
               <button type="submit" class="btn btn-warning px-4 fw-semibold">Gửi</button>
               <a href="{% url 'theo_doi' %}" class="btn btn-outline-light px-4">Hủy</a>
@@ -242,7 +234,6 @@
         </form>
       </div>
 
-      <!-- ================= CỘT PHẢI – ĐÁNH GIÁ GẦN ĐÂY ================= -->
       <div class="review-card review-right">
           <h4 class="text-warning text-center mb-3">Đánh giá gần đây</h4>
 
@@ -278,18 +269,17 @@
           </div>
       </div>
 
-  </div> <!-- END review-layout -->
+  </div>
 
 </div>
 
-<!-- MODAL -->
 <div id="imgModal" class="img-modal" onclick="closeImgModal(event)">
   <span class="img-modal-close">&times;</span>
   <img id="imgModalContent" class="img-modal-content" src="">
 </div>
 
 <script>
-/* ========== CHỌN SAO ========== */
+
 document.addEventListener("DOMContentLoaded", function() {
   function setupRating(groupId, inputId) {
     const stars = document.querySelectorAll(`#${groupId} .star`);
@@ -308,26 +298,20 @@ document.addEventListener("DOMContentLoaded", function() {
   setupRating("rating-chatluong", "input-chatluong");
 });
 
-
-/* ================================================================
-   🔥 MULTI IMAGE UPLOAD – FULL FUNCTION GIỐNG GUI.HTML
-================================================================ */
 let newImages = [];
 
 const input2 = document.getElementById("anh_minh_chung");
 const previewBox2 = document.getElementById("preview-box");
 const fileNameText2 = document.getElementById("file-name");
 
-/* Khi chọn ảnh */
 input2.addEventListener("change", () => {
-    // Gom tất cả ảnh mới vào mảng
+
     for (let file of input2.files) newImages.push(file);
 
     renderPreview();
     refreshInput();
 });
 
-/* Render preview từng ảnh */
 function renderPreview() {
     previewBox2.innerHTML = "";
 
@@ -358,17 +342,12 @@ function renderPreview() {
         newImages.length > 0 ? `${newImages.length} ảnh đã chọn` : "Chưa có ảnh nào";
 }
 
-/* Cập nhật input.files bằng DataTransfer */
 function refreshInput() {
     const dt = new DataTransfer();
     newImages.forEach(f => dt.items.add(f));
     input2.files = dt.files;
 }
 
-
-/* ================================================================
-   🔥 MODAL PHÓNG TO ẢNH
-================================================================ */
 function showImgModal(src) {
   document.getElementById("imgModalContent").src = src;
   document.getElementById("imgModal").style.display = "flex";
