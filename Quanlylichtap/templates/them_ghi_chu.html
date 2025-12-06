@@ -146,7 +146,7 @@
     width:22px; height:22px;
     border-radius:50%;
     background:#e63946; color:white;
-    font-size:14px; border:none; cursor:pointer;
+font-size:14px; border:none; cursor:pointer;
   }
 
 .hidden-file-input { display:none !important; }
@@ -222,7 +222,7 @@
             <div class="info-value">{{ buoi_tap.cam_nhan|default:"(chưa nhập)" }}</div>
           </div>
 
-          {% if buoi_tap.ds_anh_cam_nhan.all %}
+          {% if buoi_tap.ds_anh_cam_nhan.exists %}
           <div class="info-row" style="align-items:start;">
             <div class="info-label" style="padding-top:6px;">Hình ảnh</div>
             <div class="info-value">
@@ -249,7 +249,7 @@
 
           <div class="info-row">
             <div class="info-label">Mức tạ</div>
-            <div>
+<div>
               <input class="input-dark" name="muc_ta"
                      value="{{ buoi_tap.muc_ta|default_if_none:'' }}">
             </div>
@@ -294,7 +294,8 @@
      style="margin-top:10px; display:flex; flex-wrap:wrap; gap:10px;"></div>
 
 
-              {% if buoi_tap.ds_anh_cam_nhan.all %}
+              {% if buoi_tap.ds_anh_cam_nhan.exists %}
+
                 <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:10px;">
                   {% for img in buoi_tap.ds_anh_cam_nhan.all %}
                     <div id="old-{{ img.id }}" style="position:relative;display:inline-block;">
@@ -314,7 +315,9 @@
 
           <div class="d-flex justify-content-center gap-3 mt-3">
     <button type="submit" class="btn btn-warning px-4 fw-semibold">Lưu</button>
-    <a href="{{ request.path }}" class="btn btn-outline-light px-4">Hủy</a>
+    <a href="{{ request.path }}" class="btn btn-outline-light px-4"
+   onclick="resetChanges()">Hủy</a>
+
 </div>
 
         </form>
@@ -328,21 +331,21 @@
       <textarea readonly class="textarea-dark" style="min-height:220px;">
 {% if buoi_tap.nhanxet %}{{ buoi_tap.nhanxet.noi_dung }}{% endif %}
       </textarea>
-
-      {% if buoi_tap.nhanxet and buoi_tap.nhanxet.hinh_anh.all %}
+{% if buoi_tap.nhanxet and buoi_tap.nhanxet.hinh_anh.all %}
         <h4 style="margin-top:18px; color:#f7c948;">Hình ảnh từ HLV</h4>
         <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
           {% for img in buoi_tap.nhanxet.hinh_anh.all %}
             <img src="{{ img.anh.url }}"
-                 style="width:110px;height:110px;object-fit:cover;
-                        border-radius:10px;border:1px solid #444;">
+             onclick="openImgModal('{{ img.anh.url }}')"
+             style="cursor:pointer;width:110px;height:110px;object-fit:cover;
+                    border-radius:10px;border:1px solid #444;">
           {% endfor %}
         </div>
       {% endif %}
     </div>
 
   </div> <div style="margin-top: 40px;">
-      <h4 class="page-title" style="font-size: 24px;">Lịch sử tập luyện gần đây</h4>
+      <h4 style="color:#fff;">Lịch sử tập luyện gần đây</h4>
 
       <div style="max-height: 400px; overflow-y: auto;">
           {% for item in lich_su_list %}
@@ -390,7 +393,7 @@ const fileNameText = document.getElementById("file-name");
 
 input.addEventListener("change", () => {
 
-
+    // push thêm ảnh mới vào mảng
     for (let f of input.files) newImages.push(f);
 
     renderPreview();
@@ -400,7 +403,7 @@ input.addEventListener("change", () => {
         newImages.length > 0 ? `${newImages.length} ảnh đã chọn` : "Chưa có ảnh nào";
 });
 
-
+/* Render preview */
 function renderPreview() {
     previewNew.innerHTML = "";
 
@@ -411,7 +414,7 @@ function renderPreview() {
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
         img.style = "width:90px;height:90px;border:1px solid #444;border-radius:6px;cursor:pointer;";
-        img.onclick = () => openImgModal(img.src);
+img.onclick = () => openImgModal(img.src);
 
         const del = document.createElement("button");
         del.className = "remove-btn";
@@ -431,14 +434,14 @@ function renderPreview() {
     });
 }
 
-
+/* Giữ tất cả ảnh trong input để submit */
 function refreshInput() {
     const dt = new DataTransfer();
     newImages.forEach(f => dt.items.add(f));
     input.files = dt.files;
 }
 
-
+/* Xóa ảnh cũ */
 function deleteOldImg(id) {
     if (!confirm("Xóa ảnh này?")) return;
 
@@ -450,7 +453,7 @@ function deleteOldImg(id) {
     setTimeout(() => box.remove(), 200);
 }
 
-
+/* Modal ảnh */
 function openImgModal(src) {
     document.getElementById("modalImg").src = src;
     document.getElementById("imgModal").style.display = "flex";
@@ -461,6 +464,30 @@ function closeImgModal(e) {
         document.getElementById("imgModal").style.display = "none";
     }
 }
+
+function resetChanges() {
+    // reset danh sách ảnh sẽ xoá
+    deleteList = [];
+    deleteInput.value = "";
+
+    // reset ảnh mới
+    newImages = [];
+    refreshInput();
+}
+
+
+function deleteOldImg(id) {
+    if (!confirm("Xóa ảnh này?")) return;
+
+    const box = document.getElementById("old-" + id);
+
+    box.style.opacity = "0.3";
+    setTimeout(() => { box.style.display = "none"; }, 250);
+
+    deleteList.push(id);
+    deleteInput.value = deleteList.join(",");
+}
+
 </script>
 
 
