@@ -1,14 +1,117 @@
+
 {% extends "base-customer.html" %}
 {% block title %}Theo dõi phản hồi | Star Gym Fitness{% endblock %}
 
 {% block content %}
-<!-- ====== PHẦN TIÊU ĐỀ ====== -->
-<div style="max-width:800px; margin:50px auto; color:white; text-align:center;">
-  <h2 class="text-light mb-5" style="font-weight:600;">Theo dõi phản hồi</h2>
+<style>
+                :root {
+  --color-primary: #f7c948;
+  --color-text-light: #fff;
+  --color-text-secondary: #cfcfcf;
+  --color-dark-card: #222;
+  --color-darker-card: #1a1a1a;
+}
+/* --- 1. Tiêu đề Highlight (Page Title) --- */
+.page-title {
+  color:#fff;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  text-align:left;
+  text-transform: uppercase;
+}
 
-  <!-- ====== BẢNG THEO DÕI ====== -->
-  <div class="table-wrapper mx-auto">
-    <table class="custom-table">
+/* Thanh vàng nổi bật bên trái tiêu đề */
+.page-title::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 1.1em;
+  background-color: var(--color-primary);
+  margin-right: 15px;
+
+}
+/* BẢNG DARK-GOLD */
+.table-dark-gold {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #111;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.table-dark-gold thead th {
+  background-color: #222;
+  color: #ffcc33;
+  padding: 12px;
+  border-bottom: 2px solid #ffcc33;
+  text-transform: capitalize;
+}
+
+.table-dark-gold tbody td {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  padding: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.table-dark-gold tr:last-child td {
+  border-bottom: none;
+}
+
+.table-dark-gold .btn-outline-dark {
+  color: #ffcc33;
+  border: 1px solid #ffcc33;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.table-dark-gold .btn-outline-dark:hover {
+  background-color: #ffcc33;
+  color: #111;
+}
+
+/* Nút Trở về */
+.btn-back {
+  color: #111;
+  background-color: #ffcc33;
+  border: 1px solid #ffcc33;
+  padding: 6px 20px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: transparent;
+  color: #ffcc33;
+}
+</style>
+
+<div style=" color:white; text-align:center;">
+<div class="page-wrap my-4">
+  <h2 class="page-title">Theo dõi phản hồi</h2>
+
+    <!-- FORM LỌC -->
+  <div class="d-flex justify-content-end mb-4">
+    <form method="get" class="d-flex">
+      <select name="status"
+              class="form-select me-2"
+              style="max-width:200px; background-color:#111; color:#fff; border:1px solid #ffcc33;">
+        <option value="">Tất cả</option>
+        <option value="Đã xử lý" {% if status == 'Đã xử lý' %}selected{% endif %}>Đã xử lý</option>
+        <option value="Chưa xử lý" {% if status == 'Chưa xử lý' %}selected{% endif %}>Chưa xử lý</option>
+      </select>
+      <button class="btn btn-warning fw-semibold px-4">Lọc</button>
+    </form>
+  </div>
+  <!-- KHUNG BẢNG -->
+  <div class="p-3" style="background-color:#0d0d0d; border-radius:12px; box-shadow:0 0 15px rgba(255,215,0,0.15);">
+    <table class="table-dark-gold text-center" style="width:100%;">
       <thead>
         <tr>
           <th>Ngày</th>
@@ -18,124 +121,34 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in ds %}
+        {% for ph in ds %}
         <tr>
-          <td>{{ item.ngay_gui|date:"d-m-Y" }}</td>
-          <td>{{ item.loai }}</td>
+          <td>{{ ph.ngay_gui|date:"d-m-Y" }}</td>
+          <td>{{ ph.loai }}</td>
           <td>
-            {% if item.trang_thai == "Đã xử lý" %}
-              <span class="status done">Đã xử lý</span>
+            {% if ph.trang_thai == 'Chưa xử lý' %}
+            <span class="badge bg-danger">Chưa xử lý</span>
             {% else %}
-              <span class="status pending">Chưa xử lý</span>
+            <span class="badge bg-success">Đã xử lý</span>
             {% endif %}
           </td>
           <td>
-            <a href="{% url 'chi_tiet' item.id %}" class="detail-link">Xem</a>
+            <a href="{% url 'chi_tiet' ph.id %}" class="btn btn-outline-dark btn-sm">Xem</a>
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="4" class="text-center text-secondary">Chưa có phản hồi nào được gửi.</td>
-
+          <td colspan="4" class="py-3" style="color:#fff;">Chưa có phản hồi nào.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 
-  <!-- ====== NÚT TRỞ VỀ ====== -->
-  <div class="text-center mt-3">
-    <a href="{% url 'gui_phan_hoi' %}" class="btn btn-secondary">Trở về</a>
+  <!-- Nút Trở về ở giữa -->
+  <div class="mt-4 d-flex justify-content-center">
+    <a href="{% url 'gui_phan_hoi' %}" class="btn-back">Trở về</a>
   </div>
 </div>
 
-<!-- ====== CSS: ĐỒNG BỘ GIAO DIỆN ====== -->
-<style>
-.table-wrapper {
-  background-color: #1c1c1c;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.15);
-  padding: 25px;
-  width: 85%;
-  max-width: 750px;
-  margin-top: -10px;
-  color: #f8f8f8;
-  font-size: 1rem;
-  letter-spacing: 0.3px;
-  transition: all 0.3s ease;
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  color: #f5f5f5;
-  text-align: center;
-}
-
-.custom-table thead {
-  border-bottom: 2px solid #f1c40f;
-  color: #f1c40f;
-}
-
-.custom-table th {
-  padding: 14px 10px;
-  font-weight: 600;
-  font-size: 1.05rem;
-}
-
-.custom-table td {
-  padding: 14px 10px;
-  border-bottom: 1px solid #2e2e2e;
-}
-
-.custom-table tr:last-child td {
-  border-bottom: none;
-}
-
-.custom-table tr:hover {
-  background-color: #2a2a2a;
-  transition: 0.2s ease;
-}
-
-.status {
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.status.done {
-  background-color: #28a745;
-  color: #fff;
-}
-
-.status.pending {
-  background-color: #e74c3c;
-  color: #fff;
-}
-
-.detail-link {
-  color: #f1c40f;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.detail-link:hover {
-  text-decoration: underline;
-  color: #ffd700;
-}
-
-/* ====== Nút trở về ====== */
-.btn-warning {
-  background-color: #f1c40f;
-  color: #000;
-  border: none;
-  transition: 0.2s ease;
-}
-
-.btn-warning:hover {
-  background-color: #ffd700;
-  transform: scale(1.05);
-}
-</style>
 {% endblock %}

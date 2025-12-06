@@ -1,32 +1,238 @@
 {% extends "base-staff.html" %}
 {% block title %}Trả lời phản hồi{% endblock %}
+
 {% block content %}
-<div class="container py-5 text-light" style="max-width:800px;">
-  <h2 class="mb-4 fw-bold text-warning">Trả lời phản hồi</h2>
 
-  <p><strong>Ngày:</strong> {{ ph.ngay_gui|date:"d-m-Y" }}</p>
-  <p><strong>Loại phản hồi:</strong> {{ ph.loai }}</p>
-  <p><strong>Nội dung:</strong> {{ ph.noi_dung }}</p>
+<Style>
+:root {
+  --color-primary: #f7c948;
+  --color-text-light: #fff;
+  --color-text-secondary: #cfcfcf;
+  --color-dark-card: #222;
+  --color-darker-card: #1a1a1a;
+}
 
-  <form method="post" class="mt-4">
-    {% csrf_token %}
-    <div class="mb-3">
-      <label class="form-label">Trạng thái</label>
-      <select name="trang_thai" class="form-select bg-dark text-light border-warning">
-        <option value="Chưa xử lý" {% if ph.trang_thai == 'Chưa xử lý' %}selected{% endif %}>Chưa xử lý</option>
-        <option value="Đã xử lý" {% if ph.trang_thai == 'Đã xử lý' %}selected{% endif %}>Đã xử lý</option>
-      </select>
+/* --- 1. Tiêu đề Highlight (Page Title) --- */
+.page-title {
+  color:#fff;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  text-align:left;
+  text-transform: uppercase;
+}
+
+.page-title::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 1.1em;
+  background-color: var(--color-primary);
+  margin-right: 15px;
+}
+
+/* 🔥 FIX CARET LỆCH TRONG TEXTAREA */
+#textarea_reply {
+    padding-left: 10px !important;
+    text-indent: 0 !important;
+    line-height: 1.4 !important;
+    caret-color: #fff;
+}
+</Style>
+
+<div class="page-wrap my-4" style="min-height:70vh;">
+    <h2 class="page-title">Trả lời phản hồi</h2>
+
+    {% if ph.user %}
+        <p>
+            <strong>Khách hàng:</strong>
+            {% if ph.user.get_full_name %}
+                {{ ph.user.get_full_name }}
+            {% else %}
+                {{ ph.user.username }}
+            {% endif %}
+        </p>
+    {% else %}
+        <p><strong>Khách hàng:</strong> Khách lẻ (không đăng nhập)</p>
+    {% endif %}
+
+    <p><strong>Ngày:</strong> {{ ph.ngay_gui|date:"d-m-Y" }}</p>
+    <p><strong>Loại phản hồi:</strong> {{ ph.loai }}</p>
+    <p><strong>Nội dung:</strong> {{ ph.noi_dung }}</p>
+
+{% if ph.ds_anh.all %}
+<div class="mt-3">
+    <strong>Ảnh khách gửi:</strong>
+
+    <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:12px;">
+        {% for img in ph.ds_anh.all %}
+        <div style="position:relative;">
+            <img src="{{ img.anh.url }}"
+                 style="
+                     width:140px;
+                     height:140px;
+                     object-fit:cover;
+                     border-radius:10px;
+                     border:1px solid #444;
+                     transition:0.25s;">
+        </div>
+        {% endfor %}
     </div>
-
-    <div class="mb-3">
-      <label class="form-label">Trả lời phản hồi</label>
-      <textarea name="tra_loi" rows="4" class="form-control bg-dark text-light border-warning">{{ ph.tra_loi }}</textarea>
-    </div>
-
-    <div class="d-flex gap-3">
-      <button type="submit" class="btn btn-warning px-4">Gửi</button>
-      <a href="{% url 'quan-ly' %}" class="btn btn-secondary px-4">Hủy</a>
-    </div>
-  </form>
 </div>
+{% endif %}
+
+{% if first_time %}
+<p class="mt-3" style="color:#f7c948; font-style: italic;">
+    Đây là phản hồi đầu tiên của khách hàng này.
+</p>
+{% endif %}
+
+<form method="post" class="mt-4">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label class="form-label">Trạng thái</label>
+        <select name="trang_thai" id="select_status"
+                class="form-select bg-dark text-light"
+                {% if ph.trang_thai == "Đã xử lý" %}disabled{% endif %}>
+            <option value="Chưa xử lý"
+                    {% if ph.trang_thai == 'Chưa xử lý' %}selected{% endif %}>
+                Chưa xử lý
+            </option>
+            <option value="Đã xử lý"
+                    {% if ph.trang_thai == 'Đã xử lý' %}selected{% endif %}>
+                Đã xử lý
+            </option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+    <label class="form-label">Trả lời phản hồi</label>
+
+    <textarea name="tra_loi" rows="4"
+        id="textarea_reply"
+        class="form-control bg-dark text-light"
+        {% if ph.trang_thai == "Đã xử lý" %}readonly{% endif %}>{{ ph.tra_loi|default_if_none:"" }}</textarea>
+
+    {% if updated %}
+        <p class="mt-2" style="color:#f7c948; font-style:italic;">
+            Cập nhật thành công!
+        </p>
+    {% endif %}
+</div>
+
+
+    <div class="d-flex gap-3 justify-content-center">
+        {% if ph.trang_thai == "Đã xử lý" %}
+            <button type="button" id="btn_edit" class="btn btn-warning px-4 fw-semibold">Chỉnh sửa</button>
+            <button type="submit" id="btn_save" class="btn btn-warning px-4 fw-semibold" style="display:none;">Lưu</button>
+
+        {% else %}
+            <button type="submit" class="btn btn-warning px-4 fw-semibold">Gửi</button>
+        {% endif %}
+        <a href="{% url 'theo-doi-phan-hoi' %}" class="btn btn-outline-light px-4">Hủy</a>
+    </div>
+
+</form>
+
+{% if history %}
+<h3 class="mt-5 mb-3 text-warning">
+    Lịch sử phản hồi của
+    {% if ph.user %}
+        {% if ph.user.get_full_name %}
+            {{ ph.user.get_full_name }}
+        {% else %}
+            {{ ph.user.username }}
+        {% endif %}
+    {% else %}
+        Khách lẻ
+    {% endif %}
+</h3>
+
+
+<table class="table table-dark table-hover align-middle">
+    <thead class="border-bottom border-warning">
+        <tr>
+            <th>Mã phản hồi</th>
+            <th>Ngày</th>
+            <th>Loại</th>
+            <th>Trạng thái</th>
+            <th>Nội dung</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for h in history %}
+        <tr onclick="window.location.href='{% url 'tra_loi_chi_tiet' h.id %}'" style="cursor:pointer;">
+            <td>{{ h.id }}</td>
+            <td>{{ h.ngay_gui|date:"d-m-Y" }}</td>
+            <td>{{ h.loai }}</td>
+            <td>
+                {% if h.trang_thai == 'Chưa xử lý' %}
+                    <span class="badge bg-danger">Chưa xử lý</span>
+                {% else %}
+                    <span class="badge bg-success">Đã xử lý</span>
+                {% endif %}
+            </td>
+            <td>{{ h.noi_dung|truncatechars:80 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<div id="img-popup"
+     style="
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.85);
+        justify-content:center;
+        align-items:center;
+        z-index:2000;">
+    <img id="popup-img"
+         style="max-width:90%; max-height:90%; border-radius:12px; border:2px solid #fff;">
+</div>
+
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const btnEdit = document.getElementById("btn_edit");
+    const btnSave = document.getElementById("btn_save");
+    const textarea = document.getElementById("textarea_reply");
+    const selectStatus = document.getElementById("select_status");
+
+    if (btnEdit) {
+        btnEdit.addEventListener("click", function () {
+            textarea.removeAttribute("readonly");
+            selectStatus.removeAttribute("disabled");
+            btnEdit.style.display = "none";
+            btnSave.style.display = "inline-block";
+        });
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ====== PHÓNG TO ẢNH ====== */
+    const popup = document.getElementById("img-popup");
+    const popupImg = document.getElementById("popup-img");
+
+    document.querySelectorAll("img").forEach(img => {
+        img.addEventListener("click", () => {
+            popupImg.src = img.src;
+            popup.style.display = "flex";
+        });
+    });
+
+    popup.addEventListener("click", () => {
+        popup.style.display = "none";
+    });
+
+});
+</script>
+
 {% endblock %}

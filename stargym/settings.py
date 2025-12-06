@@ -42,8 +42,9 @@ INSTALLED_APPS = [
     'danhgia',
     'hotro',
     'traloikhachhang',
-    'taikhoan',
-    'Quanlylichtap'
+    'taikhoan.apps.TaikhoanConfig',
+    'Quanlylichtap',
+    'bao_cao',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Quanlylichtap.context_processors.notification_context',
             ],
         },
     },
@@ -115,7 +117,7 @@ TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -131,7 +133,7 @@ STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
 MEDIA_URL = '/media/'                      # ✅ upload ảnh đại diện
 MEDIA_ROOT = BASE_DIR / 'media'
 
-LOGIN_URL = 'taikhoan:dang_nhap'           # ✅ tên URL tiếng Việt
+LOGIN_URL = '/tai-khoan/dang-nhap/'           # ✅ tên URL tiếng Việt
 LOGIN_REDIRECT_URL = '/tai-khoan/ho-so/'
 LOGOUT_REDIRECT_URL = '/tai-khoan/dang-nhap/'
 

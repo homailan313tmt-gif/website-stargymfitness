@@ -1,5 +1,5 @@
 """
-WSGI stargym for stargym project.
+WSGI config for stargym project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

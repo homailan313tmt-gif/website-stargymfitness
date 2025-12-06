@@ -1,7 +1,7 @@
 
 from django.db import models
 from django.conf import settings
-
+from taikhoan.models import KhachHang, NhanVien
 
 class PhanHoi(models.Model):
     LOAI_PHAN_HOI = [
@@ -19,3 +19,10 @@ class PhanHoi(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.loai}"
+
+class AnhPhanHoi(models.Model):
+    phan_hoi = models.ForeignKey(PhanHoi, on_delete=models.CASCADE, related_name="ds_anh")
+    anh = models.ImageField(upload_to='phanhoi/', blank=True, null=True)
+
+
+

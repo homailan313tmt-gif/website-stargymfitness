@@ -5,7 +5,7 @@
 <header class="sticky-top border-bottom border-secondary">
   <nav class="navbar navbar-expand-lg navbar-dark bg-black">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}">
+      <a class="navbar-brand" href="{% url 'trang_chu' %}">
         <img src="{% static 'images/logo.png' %}" alt="Star Gym Logo" height="45">
       </a>
 
@@ -15,33 +15,60 @@
 
       <div class="collapse navbar-collapse justify-content-center" id="navbarMain">
         <ul class="navbar-nav mb-2 mb-lg-0 text-center">
-          <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Trang chủ</a></li>
-          <li class="nav-item"><a class="nav-link {% if '/lich-su' in request.path %}active{% endif %}" href="/lich-su/">Lịch tập</a></li>
+          <li class="nav-item"><a class="nav-link {% if '/home-customer/' in request.path %}active{% endif %}" href="{% url 'home_customer' %}">Trang chủ</a></li>
+          <li class="nav-item"><a class="nav-link {% if '/lich-su/' in request.path %}active{% endif %}" href="{% url 'lich_su_tap_luyen' %}">Lịch tập</a></li>
           <li class="nav-item"><a class="nav-link {% if '/danh-gia' in request.path %}active{% endif %}" href="/danh-gia/">Đánh giá</a></li>
           <li class="nav-item"><a class="nav-link {% if '/ho-tro' in request.path %}active{% endif %}" href="/ho-tro/">Hỗ trợ khách hàng</a></li>
         </ul>
 
         <div class="d-flex align-items-center gap-3">
             <div class="dropdown position-relative">
-            <button
-                  id="btnNotif"
-                  class="btn btn-link text-light p-0"
-                  title="Thông báo"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                  <path d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14.5A1.5 1.5 0 1 1 6.896 1.5h.208zM8 1.5a1.5 1.5 0 0 1 1.5 1.5v.436A4 4 0 0 1 13 8v2l1 1v.5H2V11l1-1V8a4 4 0 0 1 3.5-4.564V3A1.5 1.5 0 0 1 8 1.5Z"/>
-              </svg>
-              <span id="notifBadge" class="notif-badge" style="display:none;">●</span>
-            </button>
+      <button
+          id="btnNotif"
+          class="btn btn-link text-light p-0 position-relative"
+          title="Thông báo"
+          data-bs-toggle="dropdown"
+          aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+          <path d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14.5A1.5 1.5 0 1 1 6.896 1.5h.208zM8 1.5a1.5 1.5 0 0 1 1.5 1.5v.436A4 4 0 0 1 13 8v2l1 1v.5H2V11l1-1V8a4 4 0 0 1 3.5-4.564V3A1.5 1.5 0 0 1 8 1.5Z"/>
+        </svg>
+        {% if unread_count > 0 %}
+          <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+        {% endif %}
+      </button>
 
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 260px; max-height: 300px; overflow-y: auto;">
+      <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 260px; max-height: 300px; overflow-y: auto;">
 
-<!--              <li><hr class="dropdown-divider"></li>-->
-              <li><p class="dropdown-item text-muted mb-0">Hiện chưa có thông báo mới</p></li>
-            </ul>
+        {% if notifications %}
+          {% for notif in notifications %}
+              <li class="px-2 py-1">
+                <div class="d-flex flex-column">
+                  <a class="dropdown-item {% if not notif.is_read %}fw-bold{% endif %}"
+                     href="{% url 'thong_bao' %}">
+                    {{ notif.tieu_de }}
+                  </a>
+                  <small class="text-muted">{{ notif.thoi_gian|date:"d/m/Y H:i" }}</small>
+                </div>
+              </li>
+            {% endfor %}
+        {% else %}
+          <li><p class="dropdown-item text-muted mb-0">Hiện chưa có thông báo nào</p></li>
+        {% endif %}
+
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <a class="dropdown-item text-center text-primary fw-semibold" href="{% url 'thong_bao' %}">
+            Xem tất cả
+          </a>
+        </li>
+      </ul>
+    </div>
+
+
+    </div>
+
           {% if user.is_authenticated %}
-            <div class="dropdown">
+            <div class="dropdown" >
               <a class="d-flex align-items-center text-decoration-none dropdown-toggle text-light" href="#" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
                 {% if user.profile.avatar_url %}
                   <img src="{{ user.profile.avatar_url }}" alt="avatar" class="rounded-circle" width="36" height="36" style="object-fit:cover;">
@@ -50,12 +77,13 @@
                 {% endif %}
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="{% url 'taikhoan:ho_so' %}">Hồ sơ</a></li>
-                <li><a class="dropdown-item" href="/lich-tap/">Lịch tập</a></li>
-                <li><a class="dropdown-item" href="/danh-gia/">Phản hồi</a></li>
+                 <li><a class="dropdown-item" href="{% url 'taikhoan:ho_so' %}">Hồ sơ</a></li>
+                <li><a class="dropdown-item" href='{% url "lich_su_tap_luyen" %}'>Lịch tập</a></li>
+                <li><a class="dropdown-item" href='/ho-tro/'>Hỗ trợ</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                  <form method="post" action="{% url 'taikhoan:dang_xuat' %}">{% csrf_token %}
+                  <form method="post" action="{% url 'taikhoan:dang_xuat' %}">
+                    {% csrf_token %}
                     <button class="dropdown-item" type="submit">Đăng xuất</button>
                   </form>
                 </li>
@@ -71,3 +99,5 @@
   </nav>
 </header>
 {% endblock %}
+
+

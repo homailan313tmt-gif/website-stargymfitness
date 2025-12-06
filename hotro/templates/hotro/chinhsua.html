@@ -1,0 +1,303 @@
+{% extends "base-customer.html" %}
+{% block content %}
+
+<style>
+:root {
+  --color-primary: #f7c948;
+  --color-dark-card: #1a1a1a;
+}
+
+/* ===== TIÊU ĐỀ ===== */
+.page-title {
+  color:#fff;
+  font-size:40px;
+  font-weight:700;
+  margin-bottom:30px;
+  display:flex;
+  align-items:center;
+  text-transform:uppercase;
+}
+.page-title::before {
+  content:'';
+  width:6px;
+  height:1.1em;
+  background-color:var(--color-primary);
+  margin-right:15px;
+}
+
+/* ===== FORM BOX ===== */
+
+
+.form-box label {
+  font-size:1.05rem;
+  font-weight:400;
+  margin-bottom:6px;
+  display:block;
+}
+
+/* ===== INPUT/SELECT/TEXTAREA ===== */
+.form-box textarea,
+.form-box select,
+.form-box input[type="text"] {
+  background-color:#2b2e31 !important;
+  color:white !important;
+  border:1px solid #555 !important;
+  border-radius:8px;
+  padding:10px 12px;
+  width:100%;
+  transition:0.25s ease;
+}
+
+.form-box textarea:focus,
+.form-box select:focus {
+  border-color:#ffcc33 !important;
+  box-shadow:0 0 8px #ffcc33;
+  outline:none;
+}
+
+/* ===== BUTTON ===== */
+.btn-gym {
+    background-color:#ffcc33;
+    color:#111 !important;
+    border:1px solid #ffcc33;
+    padding:10px 26px;
+    border-radius:8px;
+    font-weight:700;
+    text-decoration:none !important;
+    transition:0.25s ease;
+    cursor:pointer;
+}
+.btn-gym:hover {
+    background-color:transparent;
+    color:#ffcc33 !important;
+}
+
+/* ===== UPLOAD ===== */
+.hidden-file-input { display:none !important; }
+
+.custom-file-box {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.file-name {
+  color:#ccc;
+  font-size:0.95rem;
+  font-style:italic;
+}
+
+/* ===== ẢNH & NÚT XOÁ ===== */
+.img-wrapper img {
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid #555;
+  transition:0.25s;
+}
+
+.img-wrapper:hover img {
+  opacity:0.85;
+}
+
+.delete-btn {
+  position:absolute;
+  top:-6px;
+  right:-6px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:#e63946;
+  color:white;
+  border:none;
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* ===== MODAL PHÓNG TO ẢNH ===== */
+.img-modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.85);
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+}
+
+.img-modal img {
+    max-width:80%;
+    max-height:80%;
+    border-radius:12px;
+    box-shadow:0 0 25px rgba(255,255,255,0.3);
+    animation:zoomIn 0.25s ease;
+}
+
+@keyframes zoomIn {
+  from { transform:scale(0.6); opacity:0; }
+  to   { transform:scale(1); opacity:1; }
+}
+
+
+</style>
+
+
+<div class="page-wrap my-4">
+
+  <h2 class="page-title">Chỉnh sửa phản hồi</h2>
+
+  <div style="color:white; max-width:780px;">
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="mb-3">
+    <label class="form-label">Loại phản hồi:</label>
+
+    <select name="loai"
+            class="form-control bg-dark text-light border-secondary"
+            style="max-width:460px;">
+        {% for value, label in form.loai.field.choices %}
+            <option value="{{ value }}" {% if value == form.loai.value %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <small class="text-secondary">
+        Gợi ý: Khiếu nại dịch vụ • Góp ý cải thiện • Câu hỏi thắc mắc
+    </small>
+</div>
+
+            <!-- Nội dung -->
+            <div class="mb-3">
+                <label class="form-label">Nội dung chi tiết:</label>
+                <textarea name="noi_dung" rows="4"
+  class="form-control bg-dark text-light border-secondary">{{ form.noi_dung.value }}</textarea>
+
+
+<!-- KHỐI UPLOAD ẢNH -->
+<div class="custom-file-box" style="margin-top: 18px;">
+    <button type="button" class="btn-gym"
+            onclick="document.getElementById('anh').click();">
+        Chọn ảnh...
+    </button>
+    <span id="file-name" class="file-name">Chưa có ảnh nào</span>
+    <input type="file" name="anh" accept="image/*" multiple id="anh" class="hidden-file-input">
+</div>
+
+    <!-- Preview ảnh mới -->
+    <div id="preview-box" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;"></div>
+
+    <input type="hidden" name="delete_list" id="delete_list">
+
+    <!-- ẢNH CŨ -->
+    {% if ph.ds_anh.all %}
+    <label class="mt-3">Ảnh hiện tại:</label>
+    <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:8px;">
+        {% for img in ph.ds_anh.all %}
+        <div class="img-wrapper" id="img-wrap-{{ img.id }}" style="position:relative;">
+            <img src="{{ img.anh.url }}" onclick="openImgModal('{{ img.anh.url }}')">
+            <button type="button" class="delete-btn" onclick="deleteImage({{ img.id }})">×</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn-gym mt-4">Lưu thay đổi</button>
+</form>
+
+<a href="{% url 'chi_tiet' ph.id %}" class="btn-gym mt-3 d-inline-block">Quay lại</a>
+
+</div>
+</div>
+
+
+<!-- MODAL ẢNH -->
+<div id="imgModal" class="img-modal" onclick="closeImgModal(event)">
+    <img id="modalImg">
+</div>
+
+
+<script>
+let newImages = [];
+let deleteList = [];
+
+const input = document.getElementById("anh");
+const preview = document.getElementById("preview-box");
+const fileName = document.getElementById("file-name");
+const deleteInput = document.getElementById("delete_list");
+
+/* ẢNH MỚI */
+input.addEventListener("change", () => {
+    for (let file of input.files) newImages.push(file);
+    renderPreview();
+    refreshFileInput();
+});
+
+function renderPreview() {
+    preview.innerHTML = "";
+    newImages.forEach((file, index) => {
+        const url = URL.createObjectURL(file);
+
+        const box = document.createElement("div");
+        box.style = "position:relative;width:120px;height:120px;";
+
+        const img = document.createElement("img");
+        img.src = url;
+        img.style = "width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid #555;";
+
+        const del = document.createElement("button");
+        del.className = "delete-btn";
+        del.textContent = "×";
+        del.onclick = () => {
+            newImages.splice(index, 1);
+            renderPreview();
+            refreshFileInput();
+        };
+
+        box.appendChild(img);
+        box.appendChild(del);
+        preview.appendChild(box);
+    });
+
+    fileName.textContent = newImages.length
+        ? newImages.length + " ảnh đã chọn"
+        : "Chưa có ảnh nào";
+}
+
+function refreshFileInput() {
+    const dt = new DataTransfer();
+    newImages.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+}
+
+/* XOÁ ẢNH CŨ */
+function deleteImage(id) {
+    if (!confirm("Xóa ảnh này?")) return;
+    const box = document.getElementById("img-wrap-" + id);
+    box.style.opacity = "0.3";
+    setTimeout(() => { box.style.display = "none"; }, 250);
+
+    deleteList.push(id);
+    deleteInput.value = deleteList.join(",");
+}
+
+/* MODAL PHÓNG TO ẢNH */
+function openImgModal(src) {
+    document.getElementById("modalImg").src = src;
+    document.getElementById("imgModal").style.display = "flex";
+}
+function closeImgModal(e) {
+    if (e.target.id === "imgModal") {
+        document.getElementById("imgModal").style.display = "none";
+    }
+}
+</script>
+
+{% endblock %}

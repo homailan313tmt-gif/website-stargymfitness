@@ -1,33 +1,85 @@
+
+{# file: traloikhachhang/templates/traloikhachhang/theo-doi.html #}
 {% extends "base-staff.html" %}
-{% block title %}Theo dõi phản hồi{% endblock %}
+{% block title %}Theo dõi phản hồi | Star Gym Fitness{% endblock %}
 {% block content %}
-<div class="container py-5 text-light">
-  <h2 class="mb-4 fw-bold text-warning">Theo dõi phản hồi</h2>
-  <table class="table table-dark table-hover align-middle">
-    <thead class="border-bottom border-warning">
-      <tr>
-        <th>Mã phản hồi</th><th>Ngày</th><th>Loại phản hồi</th><th>Trạng thái</th><th>Trả lời</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for ph in ds %}
-      <tr>
-        <td>{{ ph.id }}</td>
-        <td>{{ ph.ngay_gui|date:"d-m-Y" }}</td>
-        <td>{{ ph.loai }}</td>
-        <td>
-          {% if ph.trang_thai == 'Chưa xử lý' %}
-          <span class="badge bg-danger">Chưa xử lý</span>
-          {% else %}
-          <span class="badge bg-success">Đã xử lý</span>
-          {% endif %}
-        </td>
-        <td><a href="{% url 'tra_loi_chi_tiet' ph.id %}" class="btn btn-outline-warning btn-sm">Trả lời</a></td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="5" class="text-center text-secondary fst-italic">Chưa có phản hồi nào.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<style>
+:root{--color-primary:#f7c948;--color-text-light:#fff;--color-text-secondary:#cfcfcf;--color-dark-card:#222;--color-darker-card:#1a1a1a;}
+.page-wrap{max-width:1180px;margin:24px auto;padding:0 16px;color:#fff;}
+.page-title{color:#fff;font-size:40px;font-weight:700;margin-bottom:22px;display:flex;align-items:center;text-transform:uppercase}
+.page-title::before{content:'';display:block;width:6px;height:1.1em;background-color:var(--color-primary);margin-right:15px}
+.table-dark-gold{width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;background:#111;box-shadow:0 0 10px rgba(255,215,0,.2)}
+.table-dark-gold thead th{background:#222;color:#ffcc33;padding:12px;border-bottom:2px solid #ffcc33;text-transform:capitalize;}
+.table-dark-gold tbody td{background:#1a1a1a;color:#f5f5f5;padding:10px;border-bottom:1px solid #333}
+.table-dark-gold tr:last-child td{border-bottom:none}
+/* center all columns */
+.table-dark-gold thead th,.table-dark-gold tbody td{text-align:center;vertical-align:middle;}
+.badge{display:inline-block;padding:.2rem .55rem;border-radius:999px;font-weight:700;font-size:.85rem;line-height:1}
+.bg-danger{background:#dc3545;color:#fff}.bg-success{background:#2ecc71;color:#000}.bg-info{background:#3498db;color:#fff}
+.btn{display:inline-flex;align-items:center;gap:.35rem;border-radius:6px;font-weight:700;line-height:1;text-decoration:none;padding:.36rem .9rem}
+.btn-outline-dark{color:#ffcc33;border:1px solid #ffcc33;background:transparent;transition:.3s}
+.btn-outline-dark:hover{background:#ffcc33;color:#111}
+.btn-warning{background:#ffcc33;color:#111;border:1px solid #ffcc33}
+.form-select{max-width:200px;background:#111;color:#fff;border:1px solid #ffcc33;border-radius:6px;padding:.45rem .6rem}
+.card{background:#0d0d0d;border-radius:12px;padding:12px 16px;box-shadow:0 0 15px rgba(255,215,0,.15)}
+</style>
+
+<div class="page-wrap">
+  <h2 class="page-title">Theo dõi phản hồi</h2>
+
+  <div class="d-flex justify-content-end mb-4" style="gap:8px">
+    <form method="get" class="d-flex" style="gap:8px">
+      <select name="status" class="form-select">
+        <option value="">Tất cả</option>
+        <option value="Đã xử lý" {% if status == 'Đã xử lý' %}selected{% endif %}>Đã xử lý</option>
+        <option value="Chưa xử lý" {% if status == 'Chưa xử lý' %}selected{% endif %}>Chưa xử lý</option>
+      </select>
+      <button class="btn btn-warning fw-semibold">Lọc</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <table class="table-dark-gold">
+      <thead>
+        <tr>
+          <th>Mã phản hồi</th>
+          <th>Ngày</th>
+          <th>Loại phản hồi</th>
+          <th>Khách hàng</th>
+          <th>Trạng thái</th>
+          <th>Lịch sử khách hàng</th>
+          <th>Trả lời</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ph in ds %}
+        <tr>
+          <td>{{ ph.id }}</td>
+          <td>{{ ph.ngay_gui|date:"d-m-Y" }}</td>
+          <td>{{ ph.loai }}</td>
+          <td>{% if ph.user %}{% if ph.user.get_full_name %}{{ ph.user.get_full_name }}{% else %}{{ ph.user.username }}{% endif %}{% else %}—{% endif %}</td>
+          <td>{% if ph.trang_thai == 'Chưa xử lý' %}<span class="badge bg-danger">Chưa xử lý</span>{% else %}<span class="badge bg-success">Đã xử lý</span>{% endif %}</td>
+          <td>
+    {% if ph.so_lan_phan_hoi and ph.so_lan_phan_hoi > 1 %}
+        <!-- Màu xám -->
+        <span class="badge" style="background:#555;color:#fff;">
+            Đã phản hồi {{ ph.so_lan_phan_hoi }} lần
+        </span>
+    {% else %}
+        <!-- Màu vàng -->
+        <span class="badge" style="background:#ffcc33;color:#111;">
+            Phản hồi lần đầu
+        </span>
+    {% endif %}
+</td>
+
+          <td><a href="{% url 'tra_loi_chi_tiet' ph.id %}" class="btn btn-outline-dark btn-sm">Trả lời</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="py-3" style="text-align:center;color:#fff;">Chưa có phản hồi nào.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}

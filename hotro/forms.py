@@ -10,9 +10,13 @@ class PhanHoiForm(forms.ModelForm):
             'noi_dung': 'Nội dung chi tiết'
         }
         widgets = {
-            'loai': forms.Select(attrs={'class': 'form-select',
-                                        'style': 'width:400px; height:50px;'}),
-            'noi_dung': forms.Textarea(attrs={'class': 'form-control',
-                                              'rows': 3,
-                                              'style': 'width:400px; height:100px;'}),
+            'loai': forms.Select(attrs={
+                'class': 'form-select',
+                'style': 'width:400px; height:50px;'
+            }),
+            'noi_dung': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'style': 'width:400px; height:100px;'
+            }),
         }

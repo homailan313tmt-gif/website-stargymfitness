@@ -1,5 +1,5 @@
 """
-ASGI stargym for stargym project.
+ASGI config for stargym project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

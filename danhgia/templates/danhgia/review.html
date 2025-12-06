@@ -4,175 +4,381 @@
 {% block title %}Đánh giá | Star Gym Fitness{% endblock %}
 
 {% block content %}
-
-<!-- ====== PHẦN TIÊU ĐỀ CHÍNH ====== -->
-<div style="max-width:800px;margin:50px auto;color:white;text-align:center;">
-  <!-- Tiêu đề trang, căn giữa -->
-  <h2 class="text-light mb-5" style="font-weight:600;">Đánh giá</h2>
-
-  <!-- ====== FORM GỬI ĐÁNH GIÁ ====== -->
-  <form method="post" class="text-light text-start mx-auto" style="max-width:500px;">
-    {% csrf_token %} <!-- bảo mật CSRF bắt buộc trong Django -->
-
-    <!-- Hàng 1: Đánh giá chung -->
-    <div class="mb-3 d-flex align-items-center justify-content-between">
-      <label class="form-label mb-0">Đánh giá chung:</label>
-      <div class="rating-group" id="rating-chung">
-        {% for i in "12345" %} <!-- hiển thị 5 ngôi sao -->
-        <span class="star" data-value="{{ i }}">★</span>
-        {% endfor %}
-        <!-- input ẩn để lưu giá trị số sao (1-5) -->
-        <input type="hidden" name="danh_gia_chung" id="input-chung" required>
-      </div>
-    </div>
-
-    <!-- Hàng 2: Thái độ phục vụ -->
-    <div class="mb-3 d-flex align-items-center justify-content-between">
-      <label class="form-label mb-0">Thái độ phục vụ:</label>
-      <div class="rating-group" id="rating-phucvu">
-        {% for i in "12345" %}
-        <span class="star" data-value="{{ i }}">★</span>
-        {% endfor %}
-        <input type="hidden" name="thai_do_phuc_vu" id="input-phucvu" required>
-      </div>
-    </div>
-
-    <!-- Hàng 3: Chất lượng dịch vụ -->
-    <div class="mb-3 d-flex align-items-center justify-content-between">
-      <label class="form-label mb-0">Chất lượng dịch vụ:</label>
-      <div class="rating-group" id="rating-chatluong">
-        {% for i in "12345" %}
-        <span class="star" data-value="{{ i }}">★</span>
-        {% endfor %}
-        <input type="hidden" name="chat_luong_dich_vu" id="input-chatluong" required>
-      </div>
-    </div>
-
-    <!-- Hàng 4: Nhận xét chi tiết -->
-    <div class="mb-4">
-      <label class="form-label">Nhận xét chi tiết:</label>
-      <textarea name="nhan_xet" class="form-control bg-dark text-light" rows="4" placeholder="Thêm nhận xét"></textarea>
-      {% if da_gui %}
-        <p class="fst-italic mt-3"
-           style="text-align:center; color:#FFD700; font-weight:100;">
-           Đánh giá thành công!</p>
-      {% endif %}
-    </div>
-
-    <!-- Nút GỬI & HỦY -->
-    <div class="d-flex justify-content-center gap-3 mt-3">
-      <button type="submit" class="btn btn-warning px-4">Gửi</button>
-      <a href="{% url 'theo_doi' %}" class="btn btn-secondary px-4">Hủy</a>
-    </div>
-  </form>
-</div>
-
-<!-- ====== PHẦN HIỂN THỊ CÁC ĐÁNH GIÁ GẦN ĐÂY ====== -->
-<hr class="my-5 text-secondary">
-
-<h4 class="text-warning text-center mb-3">Đánh giá gần đây</h4>
-<div class="text-light">
-  {% for dg in danhgias %}
-    <!-- mỗi đánh giá hiển thị sao, nhận xét và thời gian -->
-    <div class="border-bottom border-secondary py-2">
-      <p>⭐ {{ dg.danh_gia_chung }}/5 | 💬 {{ dg.nhan_xet }}</p>
-      <small class="text-secondary">{{ dg.ngay_tao|date:"d/m/Y H:i" }}</small>
-    </div>
-  {% empty %}
-    <!-- nếu chưa có đánh giá -->
-    <p class="text-center text-secondary">Chưa có đánh giá nào.</p>
-  {% endfor %}
-</div>
-
-
-<!-- ====== CSS: CĂN GIAO DIỆN & STYLE NGÔI SAO ====== -->
 <style>
-.col-form-label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #f5f5f5;
+:root {
+  --color-primary: #f7c948;
+  --color-text-light: #fff;
+  --color-dark-card: #222;
+  --color-darker-card: #1a1a1a;
 }
 
-/* căn hàng ngôi sao ngang hàng label */
-.rating-group {
+/* PAGE TITLE */
+.page-title {
+  color:#fff;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 22px;
   display: flex;
-  gap: 5px;
-  flex-direction: row;
+  align-items: center;
+  text-transform: uppercase;
+}
+.page-title::before {
+  content: '';
+  width: 6px;
+  height: 1.1em;
+  background-color: var(--color-primary);
+  margin-right: 15px;
 }
 
-/* style sao */
-.star {
-  font-size: 36px;
-  color: #555;
+/* CARD */
+.review-card {
+  background: rgba(12,12,12,0.95);
+  border-radius: 16px;
+  border: 1px solid #333;
+  box-shadow: 0 0 25px rgba(0,0,0,0.6);
+  padding: 25px 30px;
+}
+
+/* STARS */
+.star { font-size: 32px; color:#555; cursor:pointer; transition:0.2s ease; }
+.star.active { color:#FFD700; }
+.star:hover { color:#FFC300; transform:scale(1.15); }
+
+/* LAYOUT 2 CỘT */
+.review-layout { display:flex; gap:30px; align-items:flex-start; }
+.review-left { flex:1; }
+.review-right { flex:1; max-width:450px; }
+@media(max-width:992px){ .review-layout { flex-direction:column; } }
+
+/* CUSTOM FILE INPUT */
+.hidden-file-input { display:none !important; }
+.custom-file-box {
+  display:flex; align-items:center; gap:12px; margin-bottom:10px;
+}
+.btn-upload {
+  background-color:#ffcc33; color:#111;
+  padding:8px 18px; border-radius:6px; border:1px solid #ffcc33;
+  font-weight:600; cursor:pointer; transition:0.25s;
+}
+.btn-upload:hover { background:transparent; color:#ffcc33; }
+.file-name { color:#ccc; font-size:0.95rem; font-style:italic; }
+#preview-box img {
+  width:120px; height:120px; object-fit:cover;
+  border-radius:6px; border:1px solid #444;
+}
+
+
+/* ẢNH THUMBNAIL */
+.review-thumb {
+  max-width: 250px;
+  border: 1px solid #444;
+  border-radius: 8px;
   cursor: pointer;
-  transition: color 0.25s ease;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.review-thumb:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(255,255,255,0.3);
 }
 
-/* khi chọn sao thì chuyển vàng */
-.star.active {
-  color: gold;
+/* MODAL PHÓNG TO ẢNH */
+.img-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
-/* hover vàng tạm thời */
-.star:hover {
-  color: gold;
-    transform: scale(1.2);
+.img-modal-content {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.8);
 }
 
-.form-label {
- font-size: 1.1rem;
-  width: 200px;             /* rộng hơn để cân bố cục */
-  text-align: left;
-  font-size: 1.1rem;        /* tăng kích thước chữ (~18px) */
-  font-weight: 200;         /* chữ đậm hơn */
-  color: #f8f8f8;           /* trắng sáng hơn nhẹ */
-  letter-spacing: 0.3px;    /* giãn nhẹ cho dễ đọc */
+.img-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
 }
 
-form {
-  margin-top: -30px; /* kéo form lên gần tiêu đề hơn */
+.remove-preview {
+  position:absolute;
+  top:-6px;
+  right:-6px;
+  background:red;
+  color:white;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  font-size:14px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
 }
 
-.mb-3 {
-  margin-bottom: 15px !important; /* giảm khoảng cách giữa các hàng */
-}
-.mb-4 {
-  margin-top: 25px !important;
-  margin-bottom: 15px !important; /* cho đồng đều với 3 dòng trên */
-}
-textarea {
-  margin-top: 10px; /* để textarea không dính sát label */
+.review-scroll {
+    max-height: 460px;
+    overflow-y: auto;
+    padding-right: 6px;
+    margin-top: 10px;
 }
 
+/* Scrollbar đẹp hơn */
+.review-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.review-scroll::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 6px;
+}
+.review-scroll::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+.review-scroll::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
 
 </style>
 
+<div class="container" style="max-width: 100%;">
 
-<!-- ====== JS: XỬ LÝ CLICK CHỌN SAO ====== -->
+  <div class="page-wrap my-4">
+    <h2 class="page-title">Đánh giá</h2>
+    <p class="text-secondary">Hãy chia sẻ trải nghiệm của bạn để Star Gym Fitness phục vụ tốt hơn</p>
+  </div>
+
+  <!-- ⭐⭐ 2 CỘT ⭐⭐ -->
+  <div class="review-layout">
+
+      <!-- ================= FORM (CỘT TRÁI) ================= -->
+      <div class="review-card review-left">
+
+        <form method="post" enctype="multipart/form-data" class="text-light text-start mx-auto review-form">
+            {% csrf_token %}
+
+            <!-- SAO 1-->
+            <div class="mb-3 d-flex align-items-center justify-content-between">
+              <label class="form-label mb-0">Đánh giá chung:</label>
+              <div class="rating-group" id="rating-chung">
+                {% for i in "12345" %}
+                  <span class="star" data-value="{{ i }}">★</span>
+                {% endfor %}
+                <input type="hidden" name="danh_gia_chung" id="input-chung" required>
+              </div>
+            </div>
+
+            <!-- SAO 2 -->
+            <div class="mb-3 d-flex align-items-center justify-content-between">
+              <label class="form-label mb-0">Thái độ phục vụ:</label>
+              <div class="rating-group" id="rating-phucvu">
+                {% for i in "12345" %}
+                  <span class="star" data-value="{{ i }}">★</span>
+                {% endfor %}
+                <input type="hidden" name="thai_do_phuc_vu" id="input-phucvu" required>
+              </div>
+            </div>
+
+            <!-- SAO 3 -->
+            <div class="mb-3 d-flex align-items-center justify-content-between">
+              <label class="form-label mb-0">Chất lượng dịch vụ:</label>
+              <div class="rating-group" id="rating-chatluong">
+                {% for i in "12345" %}
+                  <span class="star" data-value="{{ i }}">★</span>
+                {% endfor %}
+                <input type="hidden" name="chat_luong_dich_vu" id="input-chatluong" required>
+              </div>
+            </div>
+
+            <!-- NHẬN XÉT -->
+            <div class="mb-4">
+              <label class="form-label mb-2">Nhận xét chi tiết:</label>
+              <textarea name="nhan_xet" class="form-control bg-dark text-light border-secondary"
+                        rows="4" placeholder="Bạn cảm thấy thế nào về không gian, PT, máy móc,...?"></textarea>
+
+              {% if da_gui %}
+                <p class="fst-italic mt-3 text-center" style="color:#FFD700;">
+                  Đánh giá thành công! Cảm ơn bạn đã đánh giá.
+                </p>
+              {% endif %}
+            </div>
+
+            <!-- ================= UPLOAD ẢNH GIỐNG GUI.HTML ================= -->
+            <div class="mb-4">
+              <label class="form-label mb-2">Đính kèm ảnh (tuỳ chọn):</label>
+
+              <div class="custom-file-box">
+                  <button type="button" class="btn-upload" onclick="document.getElementById('anh_minh_chung').click();">
+                      Chọn ảnh...
+                  </button>
+
+                  <span id="file-name" class="file-name">Chưa có ảnh nào</span>
+
+                  <input type="file" name="anh_minh_chung" accept="image/*" id="anh_minh_chung" class="hidden-file-input" multiple>
+
+              </div>
+
+
+
+              <div id="preview-box" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
+            </div>
+
+            <!-- BUTTON -->
+            <div class="d-flex justify-content-center gap-3 mt-3">
+              <button type="submit" class="btn btn-warning px-4 fw-semibold">Gửi</button>
+              <a href="{% url 'theo_doi' %}" class="btn btn-outline-light px-4">Hủy</a>
+            </div>
+
+        </form>
+      </div>
+
+      <!-- ================= CỘT PHẢI – ĐÁNH GIÁ GẦN ĐÂY ================= -->
+      <div class="review-card review-right">
+          <h4 class="text-warning text-center mb-3">Đánh giá gần đây</h4>
+
+         <div class="text-light review-scroll">
+            {% for dg in danhgias %}
+              <div class="border-bottom border-secondary py-3 review-item">
+
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <p class="text-warning fw-bold mb-0">{{ dg.user.username }}</p>
+                  <small class="text-secondary">{{ dg.ngay_tao|date:"d/m/Y H:i" }}</small>
+                </div>
+
+                <p class="mb-1">
+                  <span class="badge bg-warning text-dark me-2">⭐ {{ dg.danh_gia_chung }}/5</span>
+                  <span>💬 {{ dg.nhan_xet|default:"(Không có nhận xét chi tiết)" }}</span>
+                </p>
+
+                {% if dg.images.all %}
+<div class="d-flex flex-wrap gap-2 mt-2">
+    {% for img in dg.images.all %}
+        <img src="{{ img.image.url }}"
+             class="img-fluid rounded review-thumb"
+             onclick="showImgModal('{{ img.image.url }}')"
+             style="max-width:130px;">
+    {% endfor %}
+</div>
+{% endif %}
+
+              </div>
+            {% empty %}
+              <p class="text-center text-secondary">Chưa có đánh giá nào.</p>
+            {% endfor %}
+          </div>
+      </div>
+
+  </div> <!-- END review-layout -->
+
+</div>
+
+<!-- MODAL -->
+<div id="imgModal" class="img-modal" onclick="closeImgModal(event)">
+  <span class="img-modal-close">&times;</span>
+  <img id="imgModalContent" class="img-modal-content" src="">
+</div>
+
 <script>
+/* ========== CHỌN SAO ========== */
 document.addEventListener("DOMContentLoaded", function() {
-  // hàm dùng chung cho 3 nhóm sao
   function setupRating(groupId, inputId) {
     const stars = document.querySelectorAll(`#${groupId} .star`);
     const input = document.getElementById(inputId);
 
-    // xử lý khi người dùng click chọn sao
     stars.forEach((star, index) => {
       star.addEventListener("click", () => {
-        input.value = star.dataset.value; // gán giá trị sao vào input ẩn
-        // tô vàng các sao đã chọn
-        stars.forEach((s, i) => {
-          s.classList.toggle("active", i <= index);
-        });
+        input.value = star.dataset.value;
+        stars.forEach((s, i) => s.classList.toggle("active", i <= index));
       });
     });
   }
 
-  // gọi hàm cho 3 nhóm sao
   setupRating("rating-chung", "input-chung");
   setupRating("rating-phucvu", "input-phucvu");
   setupRating("rating-chatluong", "input-chatluong");
 });
+
+
+/* ================================================================
+   🔥 MULTI IMAGE UPLOAD – FULL FUNCTION GIỐNG GUI.HTML
+================================================================ */
+let newImages = [];
+
+const input2 = document.getElementById("anh_minh_chung");
+const previewBox2 = document.getElementById("preview-box");
+const fileNameText2 = document.getElementById("file-name");
+
+/* Khi chọn ảnh */
+input2.addEventListener("change", () => {
+    // Gom tất cả ảnh mới vào mảng
+    for (let file of input2.files) newImages.push(file);
+
+    renderPreview();
+    refreshInput();
+});
+
+/* Render preview từng ảnh */
+function renderPreview() {
+    previewBox2.innerHTML = "";
+
+    newImages.forEach((file, index) => {
+        const wrap = document.createElement("div");
+        wrap.style = "position:relative; display:inline-block;";
+
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.style = "width:120px;height:120px;object-fit:cover;border-radius:6px;border:1px solid #444;cursor:pointer;";
+        img.onclick = () => showImgModal(img.src);
+
+        const remove = document.createElement("div");
+        remove.classList.add("remove-preview");
+        remove.textContent = "×";
+        remove.onclick = () => {
+            newImages.splice(index, 1);
+            renderPreview();
+            refreshInput();
+        };
+
+        wrap.appendChild(img);
+        wrap.appendChild(remove);
+        previewBox2.appendChild(wrap);
+    });
+
+    fileNameText2.textContent =
+        newImages.length > 0 ? `${newImages.length} ảnh đã chọn` : "Chưa có ảnh nào";
+}
+
+/* Cập nhật input.files bằng DataTransfer */
+function refreshInput() {
+    const dt = new DataTransfer();
+    newImages.forEach(f => dt.items.add(f));
+    input2.files = dt.files;
+}
+
+
+/* ================================================================
+   🔥 MODAL PHÓNG TO ẢNH
+================================================================ */
+function showImgModal(src) {
+  document.getElementById("imgModalContent").src = src;
+  document.getElementById("imgModal").style.display = "flex";
+}
+
+function closeImgModal(e) {
+  if (e.target.id === "imgModal" || e.target.classList.contains("img-modal-close")) {
+    document.getElementById("imgModal").style.display = "none";
+  }
+}
 </script>
 
 {% endblock %}
